@@ -4,6 +4,11 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/vue3';
 import PlaceholderPattern from '../components/PlaceholderPattern.vue';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import Radar from 'radar-sdk-js';
+import 'radar-sdk-js/dist/radar.css'
+import { onMounted, ref } from 'vue';
+import { MapMouseEvent } from 'maplibre-gl';
+
 
 const props = defineProps({
     weatherData: Object,
@@ -24,6 +29,28 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
 ];
+
+const mapMouseEv = ref<MapMouseEvent>();
+
+// initialize with your test or live publishable key
+Radar.initialize('prj_test_pk_524409d19baf858e22cfe22be9e1125b68f37b48', { 
+    /* map config options */ 
+});
+
+onMounted(() => {
+    const map = Radar.ui.map({
+        container: 'map', // OR document.getElementById('map')        
+        style: 'radar-default-v1', 
+        center: [22.4950, 58.2475], // Kuressaare coordinates (longitude, latitude)
+        zoom: 13,
+    });
+    
+    map.on('click', (e) => {
+        mapMouseEv.value = e;
+    });
+});
+
+
 </script>
 
 <template>
@@ -32,6 +59,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <div class="grid auto-rows-min gap-4 md:grid-cols-3">
+                {{ mapMouseEv?.lngLat }}
                 <Card class="overflow-hidden">
                     <CardHeader class="weather-header">
                         <CardTitle>Weather</CardTitle>
@@ -63,7 +91,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                             <div class="flex items-center justify-between">
                                 <div>
                                     <h3 class="text-lg font-semibold">{{ weatherData.name }}, {{ weatherData.sys.country
-                                        }}</h3>
+                                    }}</h3>
                                     <p class="text-xs text-muted-foreground">{{ new Date().toLocaleString() }}</p>
                                 </div>
                                 <div class="text-right">
@@ -132,7 +160,7 @@ const breadcrumbs: BreadcrumbItem[] = [
             </div>
             <div
                 class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border md:min-h-min">
-                <PlaceholderPattern />
+                <div id="map" style="width: 100%; height: 500px;" />
             </div>
         </div>
     </AppLayout>
