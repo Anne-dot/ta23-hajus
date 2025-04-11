@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\CommetnController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MarkerController;
 use App\Http\Controllers\PostController;
 use App\Models\Commetn;
+use App\Models\Marker;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -14,6 +16,10 @@ Route::get('/', function () {
 Route::get('dashboard', DashboardController::class)
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+Route::resource('markers', MarkerController::class)
+    ->except(['index'])
+    ->middleware(['auth', 'verified']);
 
 Route::resource('posts', PostController::class);
 

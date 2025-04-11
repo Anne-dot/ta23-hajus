@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Marker;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Http;
@@ -14,13 +15,15 @@ class DashboardController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $city = $request->input('city', 'London'); // Default city if none provided
-        
+        $city = $request->input('city', 'Kuressaare'); // Default city if none provided
         $weatherData = $this->getWeatherData($city);
+        $markers = Marker::all();
+
         
         return Inertia::render('Dashboard', [
             'weatherData' => $weatherData,
             'error' => session('error'),
+            'markers' => $markers,
         ]);
     }
     

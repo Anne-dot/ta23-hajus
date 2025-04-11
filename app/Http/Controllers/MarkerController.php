@@ -28,9 +28,16 @@ class MarkerController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'description' => 'nullable|string',
+        ]);
 
+        $marker = Marker::create($validated);
+        return redirect()->route('dashboard');
+    }
     /**
      * Display the specified resource.
      */
@@ -52,14 +59,27 @@ class MarkerController extends Controller
      */
     public function update(Request $request, Marker $marker)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'description' => 'nullable|string',
+        ]);
+
+        $marker->update($validated);
+        $marker->edited = now();
+        $marker->save();
+
+        return redirect()->route('dashboard');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Marker $marker)
-    {
-        //
-    }
+{
+    $marker->delete();
+    return redirect()->route('dashboard');
+}
 }

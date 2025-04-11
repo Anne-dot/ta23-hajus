@@ -17,8 +17,6 @@ return new class extends Migration
             $table->decimal('latitude', 10, 7);
             $table->decimal('longitude', 10, 7);
             $table->text('description')->nullable();
-            $table->timestamp('added')->useCurrent();
-            $table->timestamp('edited')->nullable();
             $table->timestamps();
         });
     }
