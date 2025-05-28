@@ -1,18 +1,60 @@
-# Laravel Weather Dashboard
+# Distributed Systems Course Project (Hajusrakendused)
 
-A responsive weather dashboard component for Laravel applications using OpenWeatherMap API.
+A comprehensive Laravel application implementing multiple distributed systems features for the TA23 course project.
 
 ## Project Overview
 
-This project implements a weather dashboard in multiple development phases:
+This project implements the required features from the [Hajusrakendused course requirements](https://github.com/RalfHei/Hajusrakendused):
 
-1. **Initial Development**: Built a standalone Laravel application with weather search and display functionality
-   
-2. **Framework Migration**: Refactored the application to use Vue.js and Inertia.js for improved interactivity
-   
-3. **Component Integration**: Transformed the weather application into a reusable card component
-   
-4. **Project Incorporation**: Successfully integrated the weather card into a dashboard project
+### ✅ Completed Features
+
+1. **Weather API Integration** ✓
+   - OpenWeatherMap API integration with caching
+   - Responsive weather dashboard component
+   - Real-time weather data display
+
+2. **Map Application** ✓
+   - Interactive map using MapLibre GL
+   - Marker management (CRUD operations)
+   - Coordinate tracking and display
+
+### 🚧 In Progress
+
+3. **Blog System** (Needs Testing & Fixes)
+   - Basic CRUD for posts implemented
+   - Comments system implemented (using "Commetn" table - intentional typo)
+   - Authentication middleware added
+   - TODO: Create post factory and seeder
+   - TODO: Test all functionality
+
+4. **Emotions API** (Partially Complete)
+   - Display page implemented (/display-subjects)
+   - Grid layout with colorful cards
+   - Create form UI completed with shadcn-vue components
+   - TODO: Fix slider component interaction
+   - TODO: Add POST route for storing emotions
+   - TODO: Implement store method in SubjectController
+
+5. **RESTful API Documentation** (Not Started)
+   - Need to add API endpoints with filtering, sorting, and search
+   - Need to generate API documentation
+
+## Technical Stack
+
+- **Backend**: Laravel 12.x, PHP 8.3
+- **Frontend**: Vue 3, TypeScript, Inertia.js
+- **UI Components**: shadcn-vue (Radix Vue based)
+- **Styling**: Tailwind CSS
+- **Database**: SQLite
+- **Build Tools**: Vite
+- **Maps**: MapLibre GL
+
+## Current Issues to Fix
+
+1. **Slider Component**: The intensity slider in emotions create form is not interactive
+2. **Blog Testing**: Need comprehensive testing of all blog features
+3. **API Routes**: Missing POST route for emotions (/subjects)
+4. **Database Seeders**: Need factories and seeders for posts and emotions
 
 ## Features
 

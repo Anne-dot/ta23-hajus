@@ -12,4 +12,11 @@ class Commetn extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    protected $appends = ['created_at_for_humans'];
+
+    public function getCreatedAtForHumansAttribute()
+    {
+        return $this->created_at->diffForHumans();
+    }
 }

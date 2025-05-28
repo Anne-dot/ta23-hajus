@@ -99,31 +99,32 @@ html {
 
 @layer components {
   /* Weather card specific styles */
-  .weather-header {
-    @apply bg-gradient-to-r from-[hsl(var(--weather-gradient-from))] to-[hsl(var(--weather-gradient-to))] text-white py-3 px-4 relative;
+  ::-webkit-scrollbar {
+    width: 8px;
   }
   
-  .weather-metric {
-    @apply mr-4 mb-2;
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
   }
   
-  .weather-metric-label {
-    @apply text-xs text-muted-foreground mr-1;
+  .dark ::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
   }
   
-  .weather-metric-value {
-    @apply font-medium text-sm;
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 4px;
   }
   
-  .weather-error {
-    @apply bg-destructive/15 text-destructive border border-destructive/30 rounded-md px-3 py-2 mt-3 mb-2 text-sm;
-  }
-
-  .maplibregl-popup-content {
-    @apply text-gray-800 bg-white rounded-lg shadow-lg p-3;
+  .dark ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
   }
   
-  .maplibregl-popup-close-button {
-    @apply text-gray-600 hover:text-gray-900;
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground));
+  }
+  
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground));
   }
 }

@@ -23,6 +23,7 @@ class PostController extends Controller
                 'title' => $post->title,
                 'excerpt' => Str::limit($post->description, 100),
                 'created_at' => $post->created_at,
+                'created_at_for_humans' => $post->created_at_for_humans,
                 'user' => $post->user ? ['id' => $post->user->id, 'name' => $post->user->name] : null,
                 'is_owner' => $post->user_id === auth()->id(),
             ]),
@@ -60,9 +61,9 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $post->load(['comments' => function($query) {
-            $query->with('user');
-        }, 'user']);
+        $post->load([
+            'comments.user', 
+            'user']);
         
         return Inertia::render('post/Show', [
             'post' => $post,

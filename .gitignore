@@ -22,3 +22,5 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+BLOG_TEST_PROTOCOL.md
+CLAUDE.md

@@ -8,6 +8,8 @@ class Post extends Model
 {
     protected $guarded = [];
 
+    protected $appends = ['created_at_for_humans'];
+
     public function comments()
     {
         return $this->hasMany(Commetn::class);
@@ -16,5 +18,11 @@ class Post extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+
+    public function getCreatedAtForHumansAttribute()
+    {
+        return $this->created_at->diffForHumans();
     }
 }

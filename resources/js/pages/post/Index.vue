@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
@@ -7,11 +7,26 @@ import CardTitle from '@/components/ui/card/CardTitle.vue';
 import CardDescription from '@/components/ui/card/CardDescription.vue';
 import Button from '@/components/ui/button/Button.vue';
 import { BreadcrumbItem } from '@/types';
+import { ref } from 'vue';
+import Table from '@/components/ui/table/Table.vue';
+import TableCaption from '@/components/ui/table/TableCaption.vue';
+import TableHeader from '@/components/ui/table/TableHeader.vue';
+import TableRow from '@/components/ui/table/TableRow.vue';
+import TableHead from '@/components/ui/table/TableHead.vue';
+import TableBody from '@/components/ui/table/TableBody.vue';
+import TableCell from '@/components/ui/table/TableCell.vue';
 
-const props = defineProps({
-  posts: Object,
+interface Post {
+  id: number,
+  title: string,
+  description: string,
+  created_at_for_humans: string
+}
+
+defineProps<{
+  posts: Post[],
   auth: Object
-});
+}>();
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -19,6 +34,16 @@ const breadcrumbs: BreadcrumbItem[] = [
     href: '/posts',
   },
 ];
+
+const postToDelete = ref();
+
+const deletePost = () => {
+  router.delete(route('posts.destroy', postToDelete.value), {
+    onSuccess: () => {
+      postToDelete.value = undefined
+    }
+  })
+}
 </script>
 
 <template>
@@ -40,7 +65,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                   {{ post.title }}
                 </Link>
                 <div class="text-sm text-muted-foreground mt-1">
-                  By {{ post.user?.name || 'Unknown' }} | {{ post.created_at }}
+                  By {{ post.user?.name || 'Unknown' }} | {{ post.created_at_for_humans }}
                 </div>
               </div>
               
@@ -70,7 +95,7 @@ const breadcrumbs: BreadcrumbItem[] = [
           </CardContent>
         </Card>
         
-        <!-- Pagination -->
+       
         <div class="flex justify-between items-center mt-8">
           <Link 
             v-if="posts.prev_page_url" 

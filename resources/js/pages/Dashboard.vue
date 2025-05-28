@@ -68,17 +68,17 @@ const createEnhancedPopupHTML = (marker: MarkerType): string => {
   const dark = isDarkMode();
   
   // Colors that match your application's theme
-  const bgColor = dark ? '#1e293b' : '#ffffff';
-  const titleColor = dark ? '#ffffff' : '#000000';
-  const textColor = dark ? '#e2e8f0' : '#333333';
-  const mutedColor = dark ? '#94a3b8' : '#666666';
-  const borderColor = dark ? '#334155' : '#eeeeee';
-  const buttonBgPrimary = dark ? '#0f172a' : '#f1f5f9';
-  const buttonBgDanger = dark ? '#881337' : '#fee2e2';
-  const buttonTextPrimary = dark ? '#e2e8f0' : '#334155';
-  const buttonTextDanger = dark ? '#fecdd3' : '#b91c1c';
-  const scrollbarTrackColor = dark ? '#0f172a' : '#f1f5f9';
-  const scrollbarThumbColor = dark ? '#334155' : '#cbd5e1';
+  const bgColor = dark ? 'hsl(var(--background))' : 'hsl(var(--background))';
+  const titleColor = dark ? 'hsl(var(--foreground))' : 'hsl(var(--foreground))';
+const textColor = dark ? 'hsl(var(--foreground))' : 'hsl(var(--foreground))';
+const mutedColor = dark ? 'hsl(var(--muted-foreground))' : 'hsl(var(--muted-foreground))';
+const borderColor = dark ? 'hsl(var(--border))' : 'hsl(var(--border))';
+const buttonBgPrimary = dark ? 'hsl(var(--secondary))' : 'hsl(var(--secondary))';
+const buttonBgDanger = dark ? 'hsl(var(--destructive)/15)' : 'hsl(var(--destructive)/15)';
+const buttonTextPrimary = dark ? 'hsl(var(--secondary-foreground))' : 'hsl(var(--secondary-foreground))';
+const buttonTextDanger = dark ? 'hsl(var(--destructive-foreground))' : 'hsl(var(--destructive))';
+const scrollbarTrackColor = dark ? 'hsl(var(--muted))' : 'hsl(var(--muted))';
+const scrollbarThumbColor = dark ? 'hsl(var(--border))' : 'hsl(var(--border))';
   
   return `
     <div style="margin: -10px; width: calc(100% + 20px); background-color: ${bgColor};">
@@ -409,7 +409,7 @@ watch(() => props.markers, (newMarkers) => {
               <p class="font-medium">{{ weatherData.weather[0].description.charAt(0).toUpperCase() + 
                 weatherData.weather[0].description.slice(1) }}</p>
               
-              <div class="flex flex-wrap mt-2">
+              <div class="flex flex-wrap gap-4 mt-2">
                 <div class="weather-metric">
                   <span class="weather-metric-label">Humidity:</span>
                   <span class="weather-metric-value">{{ weatherData.main.humidity }}%</span>
@@ -548,35 +548,3 @@ watch(() => props.markers, (newMarkers) => {
     </Dialog>
   </AppLayout>
 </template>
-
-<style>
-/* Custom scrollbar styling for WebKit browsers (Chrome, Safari, newer Edge) */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-
-.dark ::-webkit-scrollbar-track {
-  background: #0f172a;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  background: #334155;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
-}
-</style>
