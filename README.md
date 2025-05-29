@@ -28,13 +28,14 @@ This project implements the required features from the [Hajusrakendused course r
 
 ### 🚧 In Progress
 
-4. **Emotions API** (Partially Complete)
+4. **Custom API - Emotions** (Partially Complete)
+   - Database table: `my_favorite_subject` (follows course requirement)
    - Display page implemented (/display-subjects)
    - Grid layout with colorful cards
    - Create form UI completed with shadcn-vue components
    - TODO: Fix slider component interaction
    - TODO: Add POST route for storing emotions
-   - TODO: Implement store method in SubjectController
+   - TODO: Implement store method in SubjectController (for MyFavoriteSubject)
 
 5. **E-commerce and Shopping Cart** (Not Started)
    - Product catalog with at least 9 products (image, name, price, description, quantity)
@@ -62,10 +63,10 @@ This project implements the required features from the [Hajusrakendused course r
 
 1. **Slider Component**: The intensity slider in emotions create form is not interactive
 2. **Blog Testing**: Need comprehensive testing of all blog features
-3. **API Routes**: Missing POST route for emotions (/subjects)
+3. **API Routes**: Missing POST route for emotions (MyFavoriteSubject)
 4. **Database Seeders**: 
    - ✓ Posts factory and seeder completed
-   - TODO: Move emotions creation logic from seeder to SubjectFactory
+   - ✓ Emotions creation logic in MyFavoriteSubjectFactory
 
 ## Features
 

@@ -7,7 +7,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\SubjectController;
 use App\Models\Commetn;
 use App\Models\Marker;
-use App\Models\Subject;
+use App\Models\MyFavoriteSubject;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -44,6 +44,8 @@ Route::resource('comments', CommetnController::class)->parameters([
 Route::get('/subjects', [SubjectController::class, 'index'])->name('subjects.index');
 Route::get('/subjects/create', [SubjectController::class, 'create'])->name('subjects.create');
 
+Route::post('/subjects', [SubjectController::class, 'store'])->name('subjects.store');
+
 Route::get('display-subjects', function(){
     $datasets = [
         'andrus' => [
@@ -58,8 +60,8 @@ Route::get('display-subjects', function(){
 
     $data = match (request('type')) {
         'andrus' => Http::get($datasets['andrus']['href'])->json(),
-        'emotions' => Subject::all()->toArray(),
-        default => Subject::all()->toArray(),
+        'emotions' => MyFavoriteSubject::all()->toArray(),
+        default => MyFavoriteSubject::all()->toArray(),
     };
 
     $type = request('type', 'emotions'); // default to emotions

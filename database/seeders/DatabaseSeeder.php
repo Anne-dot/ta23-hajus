@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Post;
 use App\Models\User;
-use App\Models\Subject;
+use App\Models\MyFavoriteSubject;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -49,16 +49,16 @@ class DatabaseSeeder extends Seeder
 
         foreach ($categories as $category) {
             // Create 5 emotions per category
-            Subject::factory(5)->create();
+            MyFavoriteSubject::factory(5)->create();
         }
 
         // Create some intense emotions
-        Subject::factory(10)->intense()->create();
+        MyFavoriteSubject::factory(10)->intense()->create();
 
         // Create some mild emotions
-        Subject::factory(10)->mild()->create();
+        MyFavoriteSubject::factory(10)->mild()->create();
 
         // Create some random emotions
-        Subject::factory(20)->create();
+        MyFavoriteSubject::factory(20)->create();
     }
 }

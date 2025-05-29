@@ -53,28 +53,33 @@ const handleImageError = (event: Event, title: string) => {
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="mx-auto my-12 w-full max-w-7xl px-4">
             <div class="mb-6">
-                <h1 class="text-3xl font-bold tracking-tight text-foreground">
-                    {{ currentType === 'emotions' ? 'Emotions Display' : 'Movies Display' }}
-                </h1>
+                <div class="flex justify-between items-center">
+                    <h1 class="text-3xl font-bold tracking-tight text-foreground">
+                        {{ currentType === 'emotions' ? 'Emotions Display' : 'Movies Display' }}
+                    </h1>
+                    <Link v-if="currentType === 'emotions'" href="/subjects/create">
+                    <Button class="bg-primary text-primary-foreground hover:bg-primary/90">
+                        Add New
+                    </Button>
+                    </Link>
+                </div>
             </div>
 
             <!-- Grid layout for emotions -->
-            <div v-if="currentType === 'emotions'" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <Card 
-                    v-for="(item, index) in data" 
-                    :key="index"
-                    class="hover:shadow-lg transition-all hover:scale-[1.02]"
-                >
+            <div v-if="currentType === 'emotions'"
+                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <Card v-for="(item, index) in data" :key="index"
+                    class="hover:shadow-lg transition-all hover:scale-[1.02]">
                     <CardContent class="p-6">
                         <!-- Emoji and Title on same line -->
                         <div class="flex items-center justify-center gap-3 mb-4">
                             <span class="text-4xl">{{ item.emoji }}</span>
                             <h3 class="text-xl font-semibold text-card-foreground">{{ item.title }}</h3>
                         </div>
-                        
+
                         <!-- Category badge -->
                         <div class="text-center mb-4">
-                            <span 
+                            <span
                                 class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ring-1 ring-inset"
                                 :class="{
                                     'bg-yellow-50 text-yellow-700 ring-yellow-600/20 dark:bg-yellow-500/10 dark:text-yellow-400 dark:ring-yellow-500/20': item.category === 'happy',
@@ -83,17 +88,16 @@ const handleImageError = (event: Event, title: string) => {
                                     'bg-purple-50 text-purple-700 ring-purple-600/20 dark:bg-purple-500/10 dark:text-purple-400 dark:ring-purple-500/20': item.category === 'fear',
                                     'bg-pink-50 text-pink-700 ring-pink-600/20 dark:bg-pink-500/10 dark:text-pink-400 dark:ring-pink-500/20': item.category === 'surprised',
                                     'bg-rose-50 text-rose-700 ring-rose-600/20 dark:bg-rose-500/10 dark:text-rose-400 dark:ring-rose-500/20': item.category === 'love',
-                                }"
-                            >
+                                }">
                                 {{ item.category }}
                             </span>
                         </div>
-                        
+
                         <!-- Description - larger text -->
                         <p class="text-base text-muted-foreground leading-relaxed mb-4 min-h-[4rem]">
                             {{ item.description }}
                         </p>
-                        
+
                         <!-- Intensity bar -->
                         <div class="mt-auto">
                             <div class="flex justify-between text-xs text-muted-foreground mb-1">
@@ -101,15 +105,11 @@ const handleImageError = (event: Event, title: string) => {
                                 <span class="font-semibold text-card-foreground">{{ item.intensity }}/10</span>
                             </div>
                             <div class="w-full bg-accent rounded-full h-3 overflow-hidden">
-                                <div 
-                                    class="h-3 rounded-full transition-all"
-                                    :class="{
-                                        'bg-emerald-500 dark:bg-emerald-400': item.intensity <= 3,
-                                        'bg-amber-500 dark:bg-amber-400': item.intensity > 3 && item.intensity <= 7,
-                                        'bg-red-500 dark:bg-red-400': item.intensity > 7
-                                    }"
-                                    :style="`width: ${item.intensity * 10}%`"
-                                ></div>
+                                <div class="h-3 rounded-full transition-all" :class="{
+                                    'bg-emerald-500 dark:bg-emerald-400': item.intensity <= 3,
+                                    'bg-amber-500 dark:bg-amber-400': item.intensity > 3 && item.intensity <= 7,
+                                    'bg-red-500 dark:bg-red-400': item.intensity > 7
+                                }" :style="`width: ${item.intensity * 10}%`"></div>
                             </div>
                         </div>
                     </CardContent>
@@ -117,28 +117,23 @@ const handleImageError = (event: Event, title: string) => {
             </div>
 
             <!-- Grid layout for movies -->
-            <div v-else-if="currentType === 'andrus'" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                <Card 
-                    v-for="(movie, index) in data" 
-                    :key="index"
-                    class="overflow-hidden hover:shadow-lg transition-shadow"
-                >
+            <div v-else-if="currentType === 'andrus'"
+                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                <Card v-for="(movie, index) in data" :key="index"
+                    class="overflow-hidden hover:shadow-lg transition-shadow">
                     <!-- Movie poster -->
                     <div class="aspect-[2/3] bg-accent">
-                        <img 
-                            v-if="movie.image || movie.poster_url" 
-                            :src="movie.image || movie.poster_url" 
-                            :alt="movie.title"
-                            class="w-full h-full object-cover"
-                            @error="handleImageError($event, movie.title)"
-                        />
+                        <img v-if="movie.image || movie.poster_url" :src="movie.image || movie.poster_url"
+                            :alt="movie.title" class="w-full h-full object-cover"
+                            @error="handleImageError($event, movie.title)" />
                         <div v-else class="w-full h-full flex items-center justify-center text-muted-foreground">
                             <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 16h4m10 0h4M3 12h18"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 4v16M17 4v16M3 8h4m10 0h4M3 16h4m10 0h4M3 12h18" />
                             </svg>
                         </div>
                     </div>
-                    
+
                     <!-- Movie info -->
                     <CardContent class="p-4">
                         <h3 class="font-semibold text-sm text-card-foreground mb-1 line-clamp-2">

@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Slider } from '@/components/ui/slider'
 import {
     Form,
     FormControl,
@@ -47,7 +46,7 @@ const formSchema = toTypedSchema(
         description: z.string().min(10, 'Description must be at least 10 characters').max(150, 'Description must be less than 150 characters'),
         category: z.enum(['happy', 'sad', 'angry', 'fear', 'surprised', 'love']),
         emoji: z.string().optional(),
-        intensity: z.array(z.number()).min(1).max(1).default([5]),
+        intensity: z.number().min(1).max(10).default(5),
         color: z.string().optional(),
     })
 )
@@ -59,7 +58,7 @@ const form = useForm({
         description: '',
         category: '',
         emoji: '',
-        intensity: [5],
+        intensity: 5,
         color: '#FFD700',
     },
 })
@@ -67,10 +66,7 @@ const form = useForm({
 const onSubmit = form.handleSubmit((values) => {
     processing.value = true
     
-    router.post('/subjects', {
-        ...values,
-        intensity: values.intensity[0], // Convert array to number
-    }, {
+    router.post('/subjects', values, {
         onFinish: () => {
             processing.value = false
         },
@@ -169,30 +165,19 @@ const onSubmit = form.handleSubmit((values) => {
                         <div class="grid grid-cols-2 gap-4">
                             <FormField v-slot="{ componentField }" name="intensity">
                                 <FormItem>
-                                    <div class="flex justify-between items-center mb-2">
-                                        <FormLabel>Intensity Level</FormLabel>
-                                        <span class="text-sm font-medium">{{ componentField.modelValue?.[0] || 5 }}/10</span>
-                                    </div>
+                                    <FormLabel>Intensity Level (1-10)</FormLabel>
                                     <FormControl>
-                                        <Slider
-                                            v-bind="componentField"
+                                        <Input
+                                            type="number"
                                             :min="1"
                                             :max="10"
-                                            :step="1"
-                                            class="w-full"
+                                            placeholder="5"
+                                            v-bind="componentField"
                                         />
                                     </FormControl>
-                                    <div class="w-full bg-accent rounded-full h-2 mt-2">
-                                        <div 
-                                            :class="[
-                                                'h-2 rounded-full transition-all',
-                                                (componentField.modelValue?.[0] || 5) <= 3 ? 'bg-emerald-500' :
-                                                (componentField.modelValue?.[0] || 5) <= 7 ? 'bg-amber-500' :
-                                                'bg-red-500'
-                                            ]"
-                                            :style="`width: ${(componentField.modelValue?.[0] || 5) * 10}%`"
-                                        ></div>
-                                    </div>
+                                    <FormDescription>
+                                        Rate the intensity from 1 (mild) to 10 (extreme)
+                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             </FormField>
