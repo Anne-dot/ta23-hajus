@@ -18,14 +18,15 @@ This project implements the required features from the [Hajusrakendused course r
    - Marker management (CRUD operations)
    - Coordinate tracking and display
 
-### 🚧 In Progress
-
-3. **Blog System** (Needs Testing & Fixes)
+3. **Blog System** ✓
    - Basic CRUD for posts implemented
-   - Comments system implemented (using "Commetn" table - intentional typo)
+   - Comments system implemented (using "Commetn" table)
    - Authentication middleware added
-   - TODO: Create post factory and seeder
-   - TODO: Test all functionality
+   - Post factory and seeder created (30 posts with random users)
+   - Users can manage their own posts and comments
+   - Admin can manage all posts and comments
+
+### 🚧 In Progress
 
 4. **Emotions API** (Partially Complete)
    - Display page implemented (/display-subjects)
@@ -35,7 +36,15 @@ This project implements the required features from the [Hajusrakendused course r
    - TODO: Add POST route for storing emotions
    - TODO: Implement store method in SubjectController
 
-5. **RESTful API Documentation** (Not Started)
+5. **E-commerce and Shopping Cart** (Not Started)
+   - Product catalog with at least 9 products (image, name, price, description, quantity)
+   - Shopping cart functionality (add, update quantity, remove items)
+   - Checkout page with user data collection (name, email, phone)
+   - Payment integration (Stripe/PayPal)
+   - Order management and database storage
+   - Post-payment actions (clear cart on success, retain on failure)
+
+6. **RESTful API Documentation** (Not Started)
    - Need to add API endpoints with filtering, sorting, and search
    - Need to generate API documentation
 
@@ -54,7 +63,9 @@ This project implements the required features from the [Hajusrakendused course r
 1. **Slider Component**: The intensity slider in emotions create form is not interactive
 2. **Blog Testing**: Need comprehensive testing of all blog features
 3. **API Routes**: Missing POST route for emotions (/subjects)
-4. **Database Seeders**: Need factories and seeders for posts and emotions
+4. **Database Seeders**: 
+   - ✓ Posts factory and seeder completed
+   - TODO: Move emotions creation logic from seeder to SubjectFactory
 
 ## Features
 

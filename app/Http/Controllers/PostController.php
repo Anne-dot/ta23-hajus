@@ -26,6 +26,7 @@ class PostController extends Controller
                 'created_at_for_humans' => $post->created_at_for_humans,
                 'user' => $post->user ? ['id' => $post->user->id, 'name' => $post->user->name] : null,
                 'is_owner' => $post->user_id === auth()->id(),
+                'can_edit' => $post->user_id === auth()->id() || auth()->user()?->is_admin,
             ]),
     ]);
 }
@@ -78,7 +79,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        if (auth()->id() !== $post->user_id) {
+        if (auth()->id() !== $post->user_id && !auth()->user()->is_admin) {
             abort(403);
         }
         
@@ -89,7 +90,7 @@ class PostController extends Controller
     
     public function update(Request $request, Post $post)
     {
-        if (auth()->id() !== $post->user_id) {
+        if (auth()->id() !== $post->user_id && !auth()->user()->is_admin) {
             abort(403);
         }
         
@@ -109,7 +110,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         // Optional: Add authorization check
-        if (auth()->id() !== $post->user_id) {
+        if (auth()->id() !== $post->user_id && !auth()->user()->is_admin) {
             abort(403);
         }
         

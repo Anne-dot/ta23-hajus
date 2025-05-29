@@ -72,8 +72,8 @@ class CommetnController extends Controller
      */
     public function destroy(Commetn $commetn)
     {
-        // Only admins can delete comments
-        if (!auth()->user()->is_admin) {
+        // Allow users to delete their own comments OR admins to delete any comment
+        if (auth()->id() !== $commetn->user_id && !auth()->user()->is_admin) {
             abort(403);
         }
         

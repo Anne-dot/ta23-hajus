@@ -20,7 +20,13 @@ interface Post {
   id: number,
   title: string,
   description: string,
-  created_at_for_humans: string
+  created_at_for_humans: string,
+  is_owner: boolean,
+  can_edit: boolean,
+  user?: {
+    id: number,
+    name: string
+  }
 }
 
 defineProps<{
@@ -69,7 +75,7 @@ const deletePost = () => {
                 </div>
               </div>
               
-              <div v-if="post.is_owner" class="flex gap-2">
+              <div v-if="post.can_edit" class="flex gap-2">
                 <Link :href="`/posts/${post.id}/edit`" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-8 px-3 py-1">
                   Edit
                 </Link>

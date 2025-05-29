@@ -132,8 +132,8 @@ function deleteComment(id: number): void {
               <strong class="text-sm text-foreground">{{ comment.user.email }}</strong>
               <div class="flex items-center gap-2">
                 <span class="text-sm text-gray-500">{{ comment.created_at_for_humans }}</span>
-                <!-- Delete button only for admins -->
-                <button v-if="auth.user && auth.user.is_admin" @click="deleteComment(comment.id)"
+                <!-- Delete button for comment owner or admins -->
+                <button v-if="auth.user && (comment.user_id === auth.user.id || auth.user.is_admin)" @click="deleteComment(comment.id)"
                   class="text-xs bg-red-500 text-white px-2 py-1 rounded">
                   Delete
                 </button>
