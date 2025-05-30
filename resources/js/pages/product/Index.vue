@@ -54,44 +54,48 @@ const addToCart = (product: Product) => {
             <!-- Product Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 <Card v-for="product in products" :key="product.id"
-                    class="overflow-hidden hover:shadow-lg transition-shadow">
-                    <!-- Product Image -->
-                    <div class="aspect-square bg-accent">
+                    class="overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
+                    <!-- Product Image with Button -->
+                    <div class="aspect-square bg-accent relative">
                         <img 
-                            :src="product.image" 
+                            :src="`https://picsum.photos/seed/product-${product.id}/640/480`" 
                             :alt="product.name" 
                             class="w-full h-full object-cover"
                             @error="handleImageError"
                         />
+                        <!-- Add to Cart Button on Image -->
+                        <div class="absolute top-4 right-4">
+                            <Button 
+                                size="sm"
+                                @click="addToCart(product)"
+                                :disabled="product.quantity === 0"
+                                class="shadow-lg"
+                            >
+                                {{ product.quantity === 0 ? 'Out of Stock' : 'Add to Cart' }}
+                            </Button>
+                        </div>
                     </div>
                     
                     <!-- Product Info -->
-                    <CardContent class="p-6">
-                        <h3 class="text-xl font-semibold mb-2 text-card-foreground">
+                    <CardContent class="p-6 flex flex-col flex-1">
+                        <!-- Fixed height title container - increased height -->
+                        <h3 class="text-xl font-semibold mb-2 text-card-foreground h-[3.5rem] line-clamp-2">
                             {{ product.name }}
                         </h3>
                         <p class="text-muted-foreground text-sm mb-4 line-clamp-2">
                             {{ product.description }}
                         </p>
                         
-                        <!-- Price and Cart -->
-                        <div class="flex items-center justify-between">
-                            <span class="text-2xl font-bold text-card-foreground">
-                                ${{ product.price }}
-                            </span>
-                            <Button 
-                                size="sm" 
-                                @click="addToCart(product)"
-                                :disabled="product.quantity === 0"
-                            >
-                                {{ product.quantity === 0 ? 'Out of Stock' : 'Add to Cart' }}
-                            </Button>
-                        </div>
-                        
-                        <!-- Stock indicator (optional) -->
-                        <div v-if="product.quantity > 0 && product.quantity <= 5" 
-                            class="mt-2 text-xs text-amber-600 dark:text-amber-400">
-                            Only {{ product.quantity }} left in stock
+                        <!-- Price and Stock at bottom -->
+                        <div class="mt-auto">
+                            <div class="flex items-end justify-between">
+                                <span class="text-2xl font-bold text-card-foreground">
+                                    ${{ product.price }}
+                                </span>
+                                <span v-if="product.quantity > 0" class="text-sm text-muted-foreground">
+                                    {{ product.quantity }} in stock
+                                </span>
+                            </div>
                         </div>
                     </CardContent>
                 </Card>

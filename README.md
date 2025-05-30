@@ -42,18 +42,18 @@ This project implements the required features from the [Hajusrakendused course r
    **✅ Completed:**
    - `Product` model with migration, factory, and seeder
      - Fields: id, name, price, description, image, quantity, timestamps
-     - Factory generates random product data with picsum images
+     - Factory generates product data with stable picsum images (seeded by product ID)
      - Seeder creates 12 test products
    - `ProductController` with `index()` method
    - Product catalog route at `/products`
-   - Basic Inertia view setup for products display
-   
-   **🔄 In Progress:**
-   - Products index Vue page with grid layout
+   - Responsive product grid (1-4 columns based on screen size)
+     - Uses shadcn Card components
+     - Product images with "Add to Cart" button overlay
+     - Fixed height titles with text truncation
+     - Price and stock count display
+     - Hover effects and transitions
    
    **📋 TODO:**
-   - Style products grid (3-4 columns responsive)
-   - Add "Add to Cart" buttons
    - `CartController` - Full CRUD for cart management
    - `CheckoutController` - Handle checkout flow and Stripe integration
      - `create()` - Show checkout form (name, email, phone)
