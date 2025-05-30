@@ -18,7 +18,7 @@ import UserMenuContent from '@/components/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, Menu, Search, ShoppingCart } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 interface Props {
@@ -31,6 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const page = usePage();
 const auth = computed(() => page.props.auth);
+const cartCount = computed(() => page.props.cart?.count || 0);
 
 const isCurrentRoute = computed(() => (url: string) => page.url === url);
 
@@ -139,6 +140,19 @@ const rightNavItems: NavItem[] = [
                         <Button variant="ghost" size="icon" class="group h-9 w-9 cursor-pointer">
                             <Search class="size-5 opacity-80 group-hover:opacity-100" />
                         </Button>
+
+                        <!-- Cart Icon -->
+                        <Link :href="route('cart.index')" class="relative">
+                            <Button variant="ghost" size="icon" class="group h-9 w-9 cursor-pointer relative">
+                                <ShoppingCart class="size-5 opacity-80 group-hover:opacity-100" />
+                                <span 
+                                    v-if="cartCount > 0"
+                                    class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold"
+                                >
+                                    {{ cartCount }}
+                                </span>
+                            </Button>
+                        </Link>
 
                         <div class="hidden space-x-1 lg:flex">
                             <template v-for="item in rightNavItems" :key="item.title">

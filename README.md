@@ -53,35 +53,35 @@ This project implements the required features from the [Hajusrakendused course r
      - Price and stock count display
      - Hover effects and transitions
    
-   **📋 TODO - ADHD-Friendly Task Breakdown:**
+   **✅ COMPLETED - Cart Functionality:**
    
-   **🛒 Phase 1: Basic Cart (Do This First!)**
-   - [ ] Create `CartController.php` file
-   - [ ] Add `addToCart()` method - just save product ID & quantity to session
-   - [ ] Add route: `POST /cart/add`
-   - [ ] Test: Click "Add to Cart" → Check session has item
-   - [ ] 🎉 Celebrate! Cart items are saving!
+   **🛒 Phase 1: Basic Cart** ✅
+   - [x] Create `CartController.php` file
+   - [x] Add `addToCart()` method - saves product ID & quantity to session
+   - [x] Add route: `POST /cart/add`
+   - [x] Test: Click "Add to Cart" → Check session has item
+   - [x] 🎉 Cart items are saving!
    
-   **🔢 Phase 2: Cart Icon (Quick Visual Win)**
-   - [ ] Add cart icon to header (top-right)
-   - [ ] Show item count from session
-   - [ ] Make it update without page refresh
-   - [ ] Test: Add item → See number change
-   - [ ] 🎉 You can see the cart working!
+   **🔢 Phase 2: Cart Icon** ✅
+   - [x] Add cart icon to header (top-right)
+   - [x] Show item count from session
+   - [x] Make it update without page refresh
+   - [x] Test: Add item → See number change
+   - [x] 🎉 Cart icon working!
    
-   **📄 Phase 3: View Cart Page**
-   - [ ] Add `index()` method to CartController
-   - [ ] Create `/cart` route and view
-   - [ ] List products with quantities
-   - [ ] Show total price
-   - [ ] 🎉 You have a cart page!
+   **📄 Phase 3: View Cart Page** ✅
+   - [x] Add `index()` method to CartController
+   - [x] Create `/cart` route and view
+   - [x] List products with quantities
+   - [x] Show total price
+   - [x] 🎉 Cart page complete!
    
-   **✏️ Phase 4: Cart Management**
-   - [ ] Add quantity update buttons (+/-)
-   - [ ] Add remove item button
-   - [ ] Add "clear cart" button
-   - [ ] Test all buttons work
-   - [ ] 🎉 Full cart functionality done!
+   **✏️ Phase 4: Cart Management** ✅
+   - [x] Add quantity update buttons (+/-)
+   - [x] Add remove item button
+   - [x] Add "clear cart" button
+   - [x] Test all buttons work
+   - [x] 🎉 Full cart functionality done!
    
    **💳 Phase 5: Checkout (Later)**
    - [ ] Create CheckoutController
@@ -106,8 +106,9 @@ This project implements the required features from the [Hajusrakendused course r
 
 ## Current Issues to Fix
 
-1. **E-commerce Implementation**: Need to implement the shopping cart system
-2. **Testing**: Comprehensive testing of all features needed
+1. **Cart Icon Count on /cart page**: Cart count badge doesn't show on the cart page itself (shows on all other pages)
+2. **Guest User Products**: Products page doesn't show products for logged out users (not critical for MVP)
+3. **Testing**: Complete manual testing of cart and product features
 
 ## Features
 

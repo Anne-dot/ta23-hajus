@@ -39,6 +39,9 @@ class HandleInertiaRequests extends Middleware
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
+        $cart = session('cart', []);
+        $cartCount = collect($cart)->sum('quantity');
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -49,6 +52,13 @@ class HandleInertiaRequests extends Middleware
             'ziggy' => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
+            ],
+            'flash' => [
+                'success' => $request->session()->get('success'),
+                'error' => $request->session()->get('error'),
+            ],
+            'cart' => [
+                'count' => $cartCount,
             ],
         ];
     }

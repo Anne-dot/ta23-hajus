@@ -12,7 +12,8 @@ class ProductController extends Controller
     {
         // return dd(Product::all());
         return Inertia::render('product/Index',[
-            'products' => Product::all()
+            'products' => Product::all(),
+            'cartItems' => session('cart', [])
         ]);
     }
 }

@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { router, usePage } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem } from '@/types';
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
 import Button from '@/components/ui/button/Button.vue';
+import { ShoppingCart } from 'lucide-vue-next';
 
 interface Product {
     id: number;
@@ -15,11 +17,21 @@ interface Product {
     quantity: number;
 }
 
+interface CartItem {
+    id: number;
+    quantity: number;
+}
+
 interface Props {
     products: Product[];
+    cartItems?: Record<string, CartItem>;
 }
 
 const props = defineProps<Props>();
+const page = usePage();
+
+// Track which products were just added
+const justAdded = ref<Set<number>>(new Set());
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -28,16 +40,34 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+// Get quantity in cart for a product
+const getCartQuantity = (productId: number): number => {
+    return props.cartItems?.[productId]?.quantity || 0;
+};
+
 // Handle image loading errors
 const handleImageError = (event: Event) => {
     const target = event.target as HTMLImageElement;
     target.src = 'https://via.placeholder.com/400x400/f3f4f6/9ca3af?text=No+Image';
 };
 
-// Add to cart function (placeholder for now)
+// Add to cart function
 const addToCart = (product: Product) => {
-    // TODO: Implement cart functionality
-    console.log('Adding to cart:', product);
+    router.post(route('cart.store'), {
+        product_id: product.id,
+        quantity: 1
+    }, {
+        preserveScroll: true,
+        onSuccess: () => {
+            // Show overlay briefly
+            justAdded.value.add(product.id);
+            
+            // Remove overlay after 1 second
+            setTimeout(() => {
+                justAdded.value.delete(product.id);
+            }, 1000);
+        }
+    });
 };
 </script>
 
@@ -63,6 +93,25 @@ const addToCart = (product: Product) => {
                             class="w-full h-full object-cover"
                             @error="handleImageError"
                         />
+                        
+                        <!-- Success Overlay -->
+                        <div v-if="justAdded.has(product.id)" 
+                            class="absolute inset-0 bg-primary/90 flex items-center justify-center transition-all duration-300 z-10">
+                            <div class="text-white text-center">
+                                <svg class="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <p class="text-lg font-semibold">Added to Cart!</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cart Indicator - Shows if product is in cart -->
+                        <div v-if="getCartQuantity(product.id) > 0 && !justAdded.has(product.id)" 
+                            class="absolute top-4 left-4 bg-primary text-white rounded-full px-3 py-1 flex items-center gap-2 shadow-lg">
+                            <ShoppingCart class="w-4 h-4" />
+                            <span class="font-semibold">{{ getCartQuantity(product.id) }}</span>
+                        </div>
+                        
                         <!-- Add to Cart Button on Image -->
                         <div class="absolute top-4 right-4">
                             <Button 

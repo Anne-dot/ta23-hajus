@@ -83,5 +83,14 @@ Route::get('display-subjects', function(){
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
+// Cart routes - accessible to everyone (guests and authenticated users)
+Route::controller(\App\Http\Controllers\CartController::class)->prefix('cart')->name('cart.')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/', 'store')->name('store');
+    Route::delete('/clear', 'clear')->name('clear'); // Move this before the parameterized route
+    Route::patch('/{product}', 'update')->name('update');
+    Route::delete('/{product}', 'destroy')->name('destroy');
+});
+
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

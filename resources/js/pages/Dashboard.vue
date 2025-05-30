@@ -368,7 +368,7 @@ watch(() => props.markers, (newMarkers) => {
       <div class="grid auto-rows-min gap-4 md:grid-cols-3">
         <!-- Weather Card -->
         <Card class="overflow-hidden">
-          <CardHeader class="weather-header">
+          <CardHeader class="weather-header relative">
             <CardTitle>Weather</CardTitle>
             <CardDescription class="text-primary-foreground/90">Current conditions</CardDescription>
             <div v-if="weatherData" class="absolute top-2 right-4">
