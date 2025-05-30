@@ -9,6 +9,7 @@ use App\Http\Controllers\SubjectController;
 use App\Models\Commetn;
 use App\Models\Marker;
 use App\Models\MyFavoriteSubject;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -91,6 +92,50 @@ Route::controller(\App\Http\Controllers\CartController::class)->prefix('cart')->
     Route::patch('/{product}', 'update')->name('update');
     Route::delete('/{product}', 'destroy')->name('destroy');
 });
+
+// Checkout routes
+Route::post('/checkout', function (Request $request) {
+    try {
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        
+        $cart = session('cart', []);
+        $total = collect($cart)->sum(function ($item) {
+            return $item['price'] * $item['quantity'];
+        });
+        
+        if ($total <= 0) {
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty');
+        }
+        
+        $session = \Stripe\Checkout\Session::create([
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'usd',
+                    'product_data' => ['name' => 'Order Total'],
+                    'unit_amount' => $total * 100, // Convert to cents
+                ],
+                'quantity' => 1,
+            ]],
+            'mode' => 'payment',
+            'success_url' => url('/checkout/success'),
+            'cancel_url' => url('/cart'),
+        ]);
+        
+        return redirect($session->url);
+    } catch (\Exception $e) {
+        dd([
+            'error' => $e->getMessage(),
+            'stripe_key_exists' => !empty(env('STRIPE_SECRET')),
+            'total' => $total ?? 0,
+            'cart' => $cart ?? []
+        ]);
+    }
+})->name('checkout');
+
+Route::get('/checkout/success', function () {
+    session()->forget('cart');
+    return Inertia::render('Checkout/Success');
+})->name('checkout.success');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { router } from '@inertiajs/vue3';
+import { router, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem } from '@/types';
@@ -32,6 +32,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const page = usePage();
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -85,6 +86,26 @@ const clearCart = () => {
             preserveScroll: true
         });
     }
+};
+
+// Handle checkout - create and submit a form for full page redirect
+const handleCheckout = () => {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = route('checkout');
+    
+    // Add CSRF token
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    if (csrfToken) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = '_token';
+        input.value = csrfToken;
+        form.appendChild(input);
+    }
+    
+    document.body.appendChild(form);
+    form.submit();
 };
 </script>
 
@@ -277,7 +298,12 @@ const clearCart = () => {
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button class="w-full" size="lg">
+                            <Button 
+                                @click="handleCheckout"
+                                class="w-full" 
+                                size="lg" 
+                                :disabled="props.itemCount === 0"
+                            >
                                 Proceed to Checkout
                             </Button>
                         </CardFooter>

@@ -83,12 +83,12 @@ This project implements the required features from the [Hajusrakendused course r
    - [x] Test all buttons work
    - [x] 🎉 Full cart functionality done!
    
-   **💳 Phase 5: Checkout (Later)**
-   - [ ] Create CheckoutController
-   - [ ] Add checkout form (name, email, phone)
-   - [ ] Add Order & OrderItem models
-   - [ ] Integrate Stripe (test mode)
-   - [ ] Handle success/cancel pages
+   **💳 Phase 5: Checkout** ✅
+   - [x] Stripe integration implemented
+   - [x] Checkout redirects to Stripe payment page
+   - [x] Success page created
+   - [x] Cancel redirects back to cart
+   - [x] 🎉 Basic checkout working with Stripe!
 
 6. **RESTful API Documentation** (Not Started)
    - Need to add API endpoints with filtering, sorting, and search
@@ -108,7 +108,42 @@ This project implements the required features from the [Hajusrakendused course r
 
 1. **Cart Icon Count on /cart page**: Cart count badge doesn't show on the cart page itself (shows on all other pages)
 2. **Guest User Products**: Products page doesn't show products for logged out users (not critical for MVP)
-3. **Testing**: Complete manual testing of cart and product features
+3. **Stock Validation**: Users can add more items to cart than available in stock
+4. **Testing**: Complete manual testing of cart and product features
+
+## Stripe Integration
+
+### Setup
+1. **Environment Variables**: Add your Stripe keys to `.env`:
+   ```
+   STRIPE_KEY=pk_test_...
+   STRIPE_SECRET=sk_test_...
+   ```
+
+2. **Test Card Data for Development**:
+   - **Card Number**: `4242 4242 4242 4242`
+   - **Expiry**: Any future date (e.g., `12/34`)
+   - **CVC**: Any 3 digits (e.g., `123`)
+   - **ZIP**: Any 5 digits (e.g., `12345`)
+
+3. **Other Test Cards**:
+   - **Requires authentication**: `4000 0025 0000 3155`
+   - **Declined**: `4000 0000 0000 9995`
+   - **Insufficient funds**: `4000 0000 0000 9995`
+
+### What's Implemented
+- ✅ Basic Stripe Checkout integration
+- ✅ Redirect to Stripe payment page
+- ✅ Success page after payment
+- ✅ Cart clears after successful payment
+
+### Still To Do
+- [ ] Save orders to database (Order & OrderItem models)
+- [ ] Email confirmation after purchase
+- [ ] Order history for users
+- [ ] Webhook handling for payment confirmation
+- [ ] Inventory management (reduce stock after purchase)
+- [ ] Guest checkout support
 
 ## Features
 
@@ -156,9 +191,11 @@ This project implements the required features from the [Hajusrakendused course r
    php artisan key:generate
    ```
 
-5. Add your OpenWeatherMap API key to the .env file:
+5. Add your API keys to the .env file:
    ```
    WEATHER_API_KEY=your_api_key_here
+   STRIPE_KEY=your_stripe_publishable_key
+   STRIPE_SECRET=your_stripe_secret_key
    ```
 
 6. Build assets:
