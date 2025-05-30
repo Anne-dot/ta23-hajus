@@ -1,0 +1,5 @@
+nice to have
+kui olen postituse lehel, siis võiks olla eelmine postitus, järgmine postitus ja tagasi postituste lehele.
+tühja välja teavitus kasutajale, hetkel ei luba tühja väljaga postitada, kuid ei anna teadet- vaikne keeldumine.
+
+

@@ -29,6 +29,11 @@ const mainNavItems: NavItem[] = [
         href: '/display-subjects?type=andrus',
         icon: Clapperboard,
     },
+    {
+        title: 'Henrik',
+        href: '/display-subjects?type=henrik',
+        icon: Clapperboard,
+    }
 ];
 
 const footerNavItems: NavItem[] = [

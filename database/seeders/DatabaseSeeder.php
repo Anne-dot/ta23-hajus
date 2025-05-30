@@ -60,5 +60,8 @@ class DatabaseSeeder extends Seeder
 
         // Create some random emotions
         MyFavoriteSubject::factory(20)->create();
+
+        // Seed products database with random products
+        $this->call(ProductSeeder::class);
     }
 }

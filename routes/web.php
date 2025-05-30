@@ -4,6 +4,7 @@ use App\Http\Controllers\CommetnController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MarkerController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SubjectController;
 use App\Models\Commetn;
 use App\Models\Marker;
@@ -55,12 +56,17 @@ Route::get('display-subjects', function(){
         'emotions' => [
             'href' => 'http://127.0.0.1:8000/subjects',
             'custom_fields' => ['title', 'category', 'emoji', 'intensity'],
-        ]
+        ],
+        'henrik' => [
+            'href' => 'https://hajus.ta23mutt.itmajakas.ee/fight-cards/07b4cc44-9042-4944-b1dc-56eac757ca4f',
+            'custom_fields' => ['title', 'description'],
+        ],
     ];
 
     $data = match (request('type')) {
         'andrus' => Http::get($datasets['andrus']['href'])->json(),
         'emotions' => MyFavoriteSubject::all()->toArray(),
+        'henrik' => Http::get($datasets['henrik']['href'])->json(),
         default => MyFavoriteSubject::all()->toArray(),
     };
 
@@ -74,6 +80,8 @@ Route::get('display-subjects', function(){
         'datasets' => array_keys($datasets)
     ]);
 });
+
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
