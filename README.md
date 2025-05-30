@@ -53,20 +53,42 @@ This project implements the required features from the [Hajusrakendused course r
      - Price and stock count display
      - Hover effects and transitions
    
-   **📋 TODO:**
-   - `CartController` - Full CRUD for cart management
-   - `CheckoutController` - Handle checkout flow and Stripe integration
-     - `create()` - Show checkout form (name, email, phone)
-     - `store()` - Process payment with Stripe
-     - `success()` - Handle successful payment (clear cart, save order)
-     - `cancel()` - Handle cancelled/failed payment (keep cart)
-   - `Order` model - Store completed orders
-   - `OrderItem` model - Store order line items
-   - Shopping cart functionality (add, update quantity, remove items)
-   - Session-based cart storage for MVP
-   - Checkout page with user data collection
-   - Payment integration with Stripe (test mode)
-   - Post-payment actions (clear cart on success, retain on failure)
+   **📋 TODO - ADHD-Friendly Task Breakdown:**
+   
+   **🛒 Phase 1: Basic Cart (Do This First!)**
+   - [ ] Create `CartController.php` file
+   - [ ] Add `addToCart()` method - just save product ID & quantity to session
+   - [ ] Add route: `POST /cart/add`
+   - [ ] Test: Click "Add to Cart" → Check session has item
+   - [ ] 🎉 Celebrate! Cart items are saving!
+   
+   **🔢 Phase 2: Cart Icon (Quick Visual Win)**
+   - [ ] Add cart icon to header (top-right)
+   - [ ] Show item count from session
+   - [ ] Make it update without page refresh
+   - [ ] Test: Add item → See number change
+   - [ ] 🎉 You can see the cart working!
+   
+   **📄 Phase 3: View Cart Page**
+   - [ ] Add `index()` method to CartController
+   - [ ] Create `/cart` route and view
+   - [ ] List products with quantities
+   - [ ] Show total price
+   - [ ] 🎉 You have a cart page!
+   
+   **✏️ Phase 4: Cart Management**
+   - [ ] Add quantity update buttons (+/-)
+   - [ ] Add remove item button
+   - [ ] Add "clear cart" button
+   - [ ] Test all buttons work
+   - [ ] 🎉 Full cart functionality done!
+   
+   **💳 Phase 5: Checkout (Later)**
+   - [ ] Create CheckoutController
+   - [ ] Add checkout form (name, email, phone)
+   - [ ] Add Order & OrderItem models
+   - [ ] Integrate Stripe (test mode)
+   - [ ] Handle success/cancel pages
 
 6. **RESTful API Documentation** (Not Started)
    - Need to add API endpoints with filtering, sorting, and search
@@ -327,6 +349,24 @@ This project is deployed on Zone.ee hosting (school-provided account).
 
 - **Zone.ee Documentation**: https://help.zone.ee
 - **Laravel Deployment Guide**: https://laravel.com/docs/deployment
+
+## Future Enhancement Ideas
+
+### Reading List Feature for Blog
+Transform the blog into an interactive reading platform by applying the e-commerce UI patterns:
+- **Visual Enhancement**: Use the same card-based grid layout for blog posts with featured images
+- **"Add to Reading List"** button overlay on post images (similar to cart functionality)
+- **Personal Reading Lists**: Allow users to curate their own reading collections
+- **Reading Progress Tracking**: Mark posts as read/unread, track reading time
+- **Session-based Storage**: Start with simple session storage, upgrade to user-specific lists
+- **Additional Features**:
+  - Estimated reading time display
+  - Reading statistics and insights
+  - Share reading lists with others
+  - Bookmarks within posts
+  - Reading recommendations based on history
+
+This enhancement would elevate the blog from a basic CRUD system to an engaging reading platform, maximizing code reuse from the e-commerce components.
 
 ## Contributing
 
