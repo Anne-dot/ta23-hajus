@@ -111,7 +111,7 @@ This project implements the required features from the [Hajusrakendused course r
 2. **Guest User Products**: Products page doesn't show products for logged out users (not critical for MVP)
 3. ~~**Stock Validation**~~: ✅ Fixed - Added validation to prevent adding more items than available
 4. **Testing**: Complete manual testing of cart and product features
-5. **Currency Display**: Change currency from $ to € (Euro)
+5. ~~**Currency Display**~~: ✅ Fixed - Changed currency from $ to € (Euro) in product catalog, cart, and Stripe checkout
 
 ## Stripe Integration
 
