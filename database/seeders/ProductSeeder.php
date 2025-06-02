@@ -13,6 +13,9 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        Product::factory(12)->create();
+        Product::factory()->create(['quantity' => 1]);
+        Product::factory()->create(['quantity' => 3]);
+        Product::factory()->create(['quantity' => 4]);
+        Product::factory(9)->create();
     }
 }

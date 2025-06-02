@@ -52,6 +52,10 @@ This project implements the required features from the [Hajusrakendused course r
      - Fixed height titles with text truncation
      - Price and stock count display
      - Hover effects and transitions
+     - Low stock indicators (shows "Only X left!" when stock is 1-3 items)
+     - Stock validation prevents over-ordering
+     - "Max in Cart" button state when all available stock is in cart
+     - Error toast notifications for stock limit messages
    
    **✅ COMPLETED - Cart Functionality:**
    
@@ -103,10 +107,11 @@ This project implements the required features from the [Hajusrakendused course r
 
 ## Current Issues to Fix
 
-1. **Cart Icon Count on /cart page**: Cart count badge doesn't show on the cart page itself (shows on all other pages)
+1. ~~**Cart Icon Count on /cart page**~~: ✅ Fixed - Renamed cart prop to avoid conflict with global cart object
 2. **Guest User Products**: Products page doesn't show products for logged out users (not critical for MVP)
-3. **Stock Validation**: Users can add more items to cart than available in stock
+3. ~~**Stock Validation**~~: ✅ Fixed - Added validation to prevent adding more items than available
 4. **Testing**: Complete manual testing of cart and product features
+5. **Currency Display**: Change currency from $ to € (Euro)
 
 ## Stripe Integration
 

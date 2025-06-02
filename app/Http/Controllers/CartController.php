@@ -39,6 +39,17 @@ class CartController extends Controller
         $product = Product::find($request->product_id);
         $cart = session('cart', []);
 
+        $currentQuantityInCart = isset($cart[$product->id]) ? $cart[$product->id]['quantity'] : 0;
+        $totalQuantity = $currentQuantityInCart + $request->quantity;
+
+        if ($totalQuantity > $product->quantity) {
+            $availableToAdd = $product->quantity - $currentQuantityInCart;
+            if ($availableToAdd <= 0) {
+                return redirect()->back()->with('error', 'Cannot add more items. You already have the maximum available stock in your cart.');
+            }
+            return redirect()->back()->with('error', "Only {$availableToAdd} more items available. Current stock: {$product->quantity}");
+        }
+
         if (isset($cart[$product->id])) {
             $cart[$product->id]['quantity'] += $request->quantity;
         } else {
@@ -67,8 +78,16 @@ class CartController extends Controller
         ]);
 
         $cart = session('cart', []);
+        $product = Product::find($productId);
         
-        // Try both string and numeric keys
+        if (!$product) {
+            return redirect()->route('cart.index')->with('error', 'Product not found!');
+        }
+        
+        if ($request->quantity > $product->quantity) {
+            return redirect()->route('cart.index')->with('error', "Only {$product->quantity} items available in stock!");
+        }
+        
         $key = null;
         if (isset($cart[$productId])) {
             $key = $productId;
@@ -93,7 +112,6 @@ class CartController extends Controller
     {
         $cart = session('cart', []);
         
-        // Try both string and numeric keys
         if (isset($cart[$productId])) {
             unset($cart[$productId]);
             session(['cart' => $cart]);

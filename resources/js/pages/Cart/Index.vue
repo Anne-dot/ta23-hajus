@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { router, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem } from '@/types';
 import Card from '@/components/ui/card/Card.vue';
@@ -34,6 +34,9 @@ interface Props {
 const props = defineProps<Props>();
 const page = usePage();
 
+const errorMessage = ref<string>('');
+const showError = ref(false);
+
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Products',
@@ -44,6 +47,22 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/cart',
     },
 ];
+
+watch(() => page.props.flash.error, (error) => {
+    if (error) {
+        errorMessage.value = error as string;
+        showError.value = true;
+        setTimeout(() => {
+            showError.value = false;
+        }, 3000);
+    }
+});
+
+watch(() => page.props.flash.success, (success) => {
+    if (success) {
+        showError.value = false;
+    }
+});
 
 // Convert cart object to array for easier iteration
 const cartItemsArray = computed(() => {
@@ -111,6 +130,18 @@ const handleCheckout = () => {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
+        <!-- Error Toast -->
+        <div v-if="showError" 
+            class="fixed top-20 right-4 z-50 bg-pink-500 text-white px-6 py-4 rounded-lg shadow-lg transition-all duration-300"
+            :class="showError ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'">
+            <div class="flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <p class="font-medium">{{ errorMessage }}</p>
+            </div>
+        </div>
+        
         <div class="mx-auto my-12 w-full max-w-7xl px-4">
             <div class="flex items-center gap-3 mb-8">
                 <ShoppingCart class="h-8 w-8" />
@@ -179,9 +210,9 @@ const handleCheckout = () => {
                                             </Button>
                                         </div>
                                     </TableCell>
-                                    <TableCell class="text-right">${{ item.price.toFixed(2) }}</TableCell>
+                                    <TableCell class="text-right">€{{ item.price.toFixed(2) }}</TableCell>
                                     <TableCell class="text-right font-medium">
-                                        ${{ (item.price * item.quantity).toFixed(2) }}
+                                        €{{ (item.price * item.quantity).toFixed(2) }}
                                     </TableCell>
                                     <TableCell>
                                         <Button 
@@ -221,7 +252,7 @@ const handleCheckout = () => {
                                 />
                                 <div class="flex-1 space-y-2">
                                     <h3 class="font-semibold">{{ item.name }}</h3>
-                                    <p class="text-sm text-muted-foreground">${{ item.price.toFixed(2) }} each</p>
+                                    <p class="text-sm text-muted-foreground">€{{ item.price.toFixed(2) }} each</p>
                                     
                                     <!-- Quantity Controls -->
                                     <div class="flex items-center gap-2">
@@ -256,7 +287,7 @@ const handleCheckout = () => {
                             </div>
                             <div class="mt-3 pt-3 border-t flex justify-between">
                                 <span class="text-sm text-muted-foreground">Subtotal</span>
-                                <span class="font-semibold">${{ (item.price * item.quantity).toFixed(2) }}</span>
+                                <span class="font-semibold">€{{ (item.price * item.quantity).toFixed(2) }}</span>
                             </div>
                         </CardContent>
                     </Card>
@@ -282,7 +313,7 @@ const handleCheckout = () => {
                             <div class="space-y-2">
                                 <div class="flex justify-between text-sm">
                                     <span class="text-muted-foreground">Subtotal ({{ props.itemCount }} items)</span>
-                                    <span>${{ props.total.toFixed(2) }}</span>
+                                    <span>€{{ props.total.toFixed(2) }}</span>
                                 </div>
                                 <div class="flex justify-between text-sm">
                                     <span class="text-muted-foreground">Shipping</span>
@@ -293,7 +324,7 @@ const handleCheckout = () => {
                             <div class="border-t pt-4">
                                 <div class="flex justify-between">
                                     <span class="text-lg font-semibold">Total</span>
-                                    <span class="text-lg font-semibold">${{ props.total.toFixed(2) }}</span>
+                                    <span class="text-lg font-semibold">€{{ props.total.toFixed(2) }}</span>
                                 </div>
                             </div>
                         </CardContent>

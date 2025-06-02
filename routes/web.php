@@ -108,7 +108,7 @@ Route::post('/checkout', function (Request $request) {
         $session = \Stripe\Checkout\Session::create([
             'line_items' => [[
                 'price_data' => [
-                    'currency' => 'usd',
+                    'currency' => 'eur',
                     'product_data' => ['name' => 'Order Total'],
                     'unit_amount' => $total * 100, // Convert to cents
                 ],
