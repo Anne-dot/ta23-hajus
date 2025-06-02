@@ -66,8 +66,18 @@ class PostController extends Controller
             'comments.user', 
             'user']);
         
+        $previousPost = Post::where('id', '<', $post->id)
+            ->orderBy('id', 'desc')
+            ->first(['id', 'title']);
+            
+        $nextPost = Post::where('id', '>', $post->id)
+            ->orderBy('id', 'asc')
+            ->first(['id', 'title']);
+        
         return Inertia::render('post/Show', [
             'post' => $post,
+            'previousPost' => $previousPost,
+            'nextPost' => $nextPost,
             'auth' => [
                 'user' => auth()->user()
             ]

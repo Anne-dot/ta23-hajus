@@ -90,9 +90,6 @@ This project implements the required features from the [Hajusrakendused course r
    - [x] Cancel redirects back to cart
    - [x] 🎉 Basic checkout working with Stripe!
 
-6. **RESTful API Documentation** (Not Started)
-   - Need to add API endpoints with filtering, sorting, and search
-   - Need to generate API documentation
 
 ## Technical Stack
 

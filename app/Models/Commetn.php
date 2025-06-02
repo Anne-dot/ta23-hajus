@@ -17,6 +17,6 @@ class Commetn extends Model
 
     public function getCreatedAtForHumansAttribute()
     {
-        return $this->created_at->diffForHumans();
+        return $this->created_at ? $this->created_at->diffForHumans() : 'Unknown date';
     }
 }
