@@ -57,42 +57,13 @@ This project implements the required features from the [Hajusrakendused course r
      - "Max in Cart" button state when all available stock is in cart
      - Error toast notifications for stock limit messages
    
-   **✅ COMPLETED - Cart Functionality:**
-   
-   **🛒 Phase 1: Basic Cart** ✅
-   - [x] Create `CartController.php` file
-   - [x] Add `addToCart()` method - saves product ID & quantity to session
-   - [x] Add route: `POST /cart/add`
-   - [x] Test: Click "Add to Cart" → Check session has item
-   - [x] 🎉 Cart items are saving!
-   
-   **🔢 Phase 2: Cart Icon** ✅
-   - [x] Add cart icon to header (top-right)
-   - [x] Show item count from session
-   - [x] Make it update without page refresh
-   - [x] Test: Add item → See number change
-   - [x] 🎉 Cart icon working!
-   
-   **📄 Phase 3: View Cart Page** ✅
-   - [x] Add `index()` method to CartController
-   - [x] Create `/cart` route and view
-   - [x] List products with quantities
-   - [x] Show total price
-   - [x] 🎉 Cart page complete!
-   
-   **✏️ Phase 4: Cart Management** ✅
-   - [x] Add quantity update buttons (+/-)
-   - [x] Add remove item button
-   - [x] Add "clear cart" button
-   - [x] Test all buttons work
-   - [x] 🎉 Full cart functionality done!
-   
-   **💳 Phase 5: Checkout** ✅
-   - [x] Stripe integration implemented
-   - [x] Checkout redirects to Stripe payment page
-   - [x] Success page created
-   - [x] Cancel redirects back to cart
-   - [x] 🎉 Basic checkout working with Stripe!
+   **✅ Shopping Cart & Checkout**
+   - Session-based cart management
+   - Add/remove items with quantity controls
+   - Cart icon with live item count
+   - Responsive cart page with table (desktop) and card (mobile) views
+   - Stripe checkout integration (EUR currency)
+   - Success page after payment completion
 
 
 ## Technical Stack
@@ -105,13 +76,19 @@ This project implements the required features from the [Hajusrakendused course r
 - **Build Tools**: Vite
 - **Maps**: MapLibre GL
 
-## Current Issues to Fix
+## Deployment Ready
 
-1. ~~**Cart Icon Count on /cart page**~~: ✅ Fixed - Renamed cart prop to avoid conflict with global cart object
-2. **Guest User Products**: Products page doesn't show products for logged out users (not critical for MVP)
-3. ~~**Stock Validation**~~: ✅ Fixed - Added validation to prevent adding more items than available
-4. **Testing**: Complete manual testing of cart and product features
-5. ~~**Currency Display**~~: ✅ Fixed - Changed currency from $ to € (Euro) in product catalog, cart, and Stripe checkout
+The application is ready for deployment with the following completed features:
+- ✅ All required course features implemented
+- ✅ Stock validation and low stock indicators
+- ✅ Currency localized to Euro (€)
+- ✅ Error handling and user feedback
+- ✅ Stripe integration for payments
+
+**Pre-deployment tasks:**
+1. Complete manual testing of all features
+2. Test deployment readiness
+3. Deploy to Zone.ee hosting
 
 ## Stripe Integration
 
@@ -138,14 +115,7 @@ This project implements the required features from the [Hajusrakendused course r
 - ✅ Redirect to Stripe payment page
 - ✅ Success page after payment
 - ✅ Cart clears after successful payment
-
-### Still To Do
-- [ ] Save orders to database (Order & OrderItem models)
-- [ ] Email confirmation after purchase
-- [ ] Order history for users
-- [ ] Webhook handling for payment confirmation
-- [ ] Inventory management (reduce stock after purchase)
-- [ ] Guest checkout support
+- ✅ Currency set to EUR
 
 ## Features
 
@@ -391,6 +361,15 @@ This project is deployed on Zone.ee hosting (school-provided account).
 - **Laravel Deployment Guide**: https://laravel.com/docs/deployment
 
 ## Future Enhancement Ideas
+
+### E-commerce Enhancements
+- **Guest Checkout**: Allow users to purchase without creating an account
+- **Order Management**: Save orders to database with Order & OrderItem models
+- **Inventory Management**: Automatically reduce stock after successful purchase
+- **Email Confirmations**: Send order confirmation emails after purchase
+- **Order History**: Allow users to view their past orders
+- **Webhook Integration**: Handle Stripe webhooks for payment confirmation
+- **Guest Product Viewing**: Enable non-logged-in users to browse products
 
 ### Reading List Feature for Blog
 Transform the blog into an interactive reading platform by applying the e-commerce UI patterns:
