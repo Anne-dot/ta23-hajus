@@ -6,6 +6,7 @@ import CardTitle from '@/components/ui/card/CardTitle.vue';
 import Textarea from '@/components/ui/textarea/Textarea.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Icon from '@/components/Icon.vue';
+import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem } from '@/types';
 import { useForm, Link, router } from '@inertiajs/vue3';
@@ -173,10 +174,13 @@ function deleteComment(id: number): void {
       <div class="mt-8">
         <h2 class="text-xl font-semibold mb-4">Comments</h2>
         <form @submit.prevent="submitComment">
-          <div class="flex gap-4 items-start">
-            <input type="hidden" v-model="commentForm.post_id">
-            <Textarea v-model="commentForm.comment" placeholder="Add a comment..." class="flex-grow"></Textarea>
-            <Button type="submit" :disabled="commentForm.processing">Comment</Button>
+          <div class="flex flex-col gap-2">
+            <div class="flex gap-4 items-start">
+              <input type="hidden" v-model="commentForm.post_id">
+              <Textarea v-model="commentForm.comment" placeholder="Add a comment..." class="flex-grow"></Textarea>
+              <Button type="submit" :disabled="commentForm.processing">Comment</Button>
+            </div>
+            <InputError :message="commentForm.errors.comment" class="ml-1" />
           </div>
         </form>
       </div>

@@ -9,6 +9,7 @@ import CardTitle from '@/components/ui/card/CardTitle.vue';
 import Input from '@/components/ui/input/Input.vue';
 import Label from '@/components/ui/label/Label.vue';
 import Textarea from '@/components/ui/textarea/Textarea.vue';
+import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem } from '@/types';
 import { router, useForm } from '@inertiajs/vue3';
@@ -51,10 +52,12 @@ function discard() {
                         <div>
                             <Label>Title</Label>
                             <Input v-model="form.title" />
+                            <InputError :message="form.errors.title" class="mt-1" />
                         </div>
                         <div>
                             <Label>Description</Label>
                             <Textarea v-model="form.description" class="flex-grow min-h-[200px]"></Textarea>
+                            <InputError :message="form.errors.description" class="mt-1" />
                         </div>
                     </CardContent>
                     <CardFooter class="flex justify-end gap-2">
