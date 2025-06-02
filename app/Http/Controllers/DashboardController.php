@@ -15,7 +15,7 @@ class DashboardController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $city = $request->input('city', 'Kuressaare'); // Default city if none provided
+        $city = $request->input('city', 'Kuressaare');
         $weatherData = $this->getWeatherData($city);
         $markers = Marker::all();
 

@@ -3,18 +3,8 @@ import { Link, router } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
-import CardTitle from '@/components/ui/card/CardTitle.vue';
 import CardDescription from '@/components/ui/card/CardDescription.vue';
-import Button from '@/components/ui/button/Button.vue';
 import { BreadcrumbItem } from '@/types';
-import { ref } from 'vue';
-import Table from '@/components/ui/table/Table.vue';
-import TableCaption from '@/components/ui/table/TableCaption.vue';
-import TableHeader from '@/components/ui/table/TableHeader.vue';
-import TableRow from '@/components/ui/table/TableRow.vue';
-import TableHead from '@/components/ui/table/TableHead.vue';
-import TableBody from '@/components/ui/table/TableBody.vue';
-import TableCell from '@/components/ui/table/TableCell.vue';
 
 interface Post {
   id: number,
@@ -41,15 +31,6 @@ const breadcrumbs: BreadcrumbItem[] = [
   },
 ];
 
-const postToDelete = ref();
-
-const deletePost = () => {
-  router.delete(route('posts.destroy', postToDelete.value), {
-    onSuccess: () => {
-      postToDelete.value = undefined
-    }
-  })
-}
 </script>
 
 <template>

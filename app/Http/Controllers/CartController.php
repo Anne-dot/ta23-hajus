@@ -52,7 +52,7 @@ class CartController extends Controller
         }
 
         session(['cart' => $cart]);
-        Session::save(); // Force session save
+        Session::save();
 
         return redirect()->back()->with('success', 'Product added to cart!');
     }
@@ -79,7 +79,7 @@ class CartController extends Controller
         if ($key !== null) {
             $cart[$key]['quantity'] = $request->quantity;
             session(['cart' => $cart]);
-            Session::save(); // Force session save
+            Session::save();
             return redirect()->route('cart.index')->with('success', 'Cart updated!');
         }
 
@@ -102,7 +102,7 @@ class CartController extends Controller
             session(['cart' => $cart]);
         }
         
-        Session::save(); // Force session save
+        Session::save();
 
         return redirect()->route('cart.index')->with('success', 'Product removed from cart!');
     }
@@ -113,7 +113,7 @@ class CartController extends Controller
     public function clear()
     {
         session()->forget('cart');
-        Session::save(); // Force session save
+        Session::save();
         
         return redirect()->route('cart.index')->with('success', 'Cart cleared!');
     }

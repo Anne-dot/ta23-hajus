@@ -28,16 +28,13 @@ class CommetnController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate just post_id and comment from the request
         $validated = $request->validate([
             'post_id' => 'required|exists:posts,id',
             'comment' => 'required',
         ]);
         
-        // Add the user_id to the validated data
         $validated['user_id'] = auth()->id();
         
-        // Create the comment
         Commetn::create($validated);
         
         return back();

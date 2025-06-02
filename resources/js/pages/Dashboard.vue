@@ -63,11 +63,9 @@ const mapStyle = computed((): string => {
   return isDarkMode() ? 'radar-dark-v1' : 'radar-default-v1';
 });
 
-// Create enhanced popup HTML with edit and delete buttons
 const createEnhancedPopupHTML = (marker: MarkerType): string => {
   const dark = isDarkMode();
   
-  // Colors that match your application's theme
   const bgColor = dark ? 'hsl(var(--background))' : 'hsl(var(--background))';
   const titleColor = dark ? 'hsl(var(--foreground))' : 'hsl(var(--foreground))';
 const textColor = dark ? 'hsl(var(--foreground))' : 'hsl(var(--foreground))';
@@ -169,11 +167,10 @@ const deleteMarker = (marker: MarkerType): void => {
 const showMarkerOnMap = (marker: MarkerType): void => {
   if (!mapInstance.value) return;
   
-  // Close any existing popup
   if (currentPopup.value) {
     currentPopup.value.remove();
     currentPopup.value = null;
-    window.closeCurrentPopupRef = null; // Clear window reference
+    window.closeCurrentPopupRef = null;
   }
   
   mapInstance.value.flyTo({
@@ -182,7 +179,6 @@ const showMarkerOnMap = (marker: MarkerType): void => {
     duration: 800
   });
   
-  // Create and open a new popup
   currentPopup.value = Radar.ui.popup({ 
     closeButton: false,
     closeOnClick: false,
@@ -191,11 +187,9 @@ const showMarkerOnMap = (marker: MarkerType): void => {
   .setLngLat([marker.longitude, marker.latitude])
   .addTo(mapInstance.value);
   
-  // Store the direct reference on the window object
   window.closeCurrentPopupRef = currentPopup.value;
 };
 
-// Update visible markers based on current map bounds
 const updateVisibleMarkers = (): void => {
   if (!mapInstance.value || !allMarkers.value.length) return;
   
@@ -210,20 +204,16 @@ const updateVisibleMarkers = (): void => {
   }
 };
 
-// Add markers to the map with enhanced popups
 const addMarkersToMap = (): void => {
   if (!mapInstance.value || !allMarkers.value.length) return;
   
   try {
-    // Clear existing markers
     mapInstance.value.clearMarkers();
     markerRefs.value = {};
     
-    // Add each marker to the map
     allMarkers.value.forEach(marker => {
-      // Create marker with Radar's marker API
       const radarMarker = Radar.ui.marker({
-        color: '#e11d48', // Red color matching your theme
+        color: '#e11d48',
         width: 20,
         height: 20,
         popup: {
@@ -235,12 +225,9 @@ const addMarkersToMap = (): void => {
       .setLngLat([marker.longitude, marker.latitude])
       .addTo(mapInstance.value);
       
-      // Store reference to the marker
       markerRefs.value[marker.id] = radarMarker;
       
-      // Add event listener to store popup reference when clicked
       radarMarker.getElement().addEventListener('click', () => {
-        // Store the popup reference on the window when the popup opens
         if (radarMarker.getPopup()) {
           window.closeCurrentPopupRef = radarMarker.getPopup();
           currentPopup.value = radarMarker.getPopup();
@@ -248,20 +235,16 @@ const addMarkersToMap = (): void => {
       });
     });
     
-    // Update visible markers list
     updateVisibleMarkers();
   } catch (error) {
     console.error('Error adding markers to map:', error);
   }
 };
 
-// Initialize map and theme detection
 onMounted(() => {
   try {
-    // Initialize window popup reference
     window.closeCurrentPopupRef = null;
     
-    // Expose functions to window for popup button interactions
     window.editMarkerFromPopup = (markerId: number) => {
       const marker = allMarkers.value.find(m => m.id === markerId);
       if (marker) {
@@ -283,7 +266,6 @@ onMounted(() => {
       }
     };
     
-    // Add function to close popup using the direct window reference
     window.closeCurrentPopup = () => {
       if (window.closeCurrentPopupRef) {
         window.closeCurrentPopupRef.remove();
@@ -292,42 +274,34 @@ onMounted(() => {
       }
     };
     
-    // Initialize Radar SDK with your publishable key
     Radar.initialize('prj_test_pk_524409d19baf858e22cfe22be9e1125b68f37b48');
     
-    // Store all markers from props
     allMarkers.value = props.markers || [];
     
-    // Create map with theme-aware style as per Radar documentation
     mapInstance.value = Radar.ui.map({
       container: 'map',
-      style: mapStyle.value, // Use the computed style based on theme
+      style: mapStyle.value,
       center: [22.4950, 58.2475],
       zoom: 13
     });
 
-    // Map click handler for adding markers
     mapInstance.value.on('click', (e: any) => {
       markerForm.value.latitude = e.lngLat.lat;
       markerForm.value.longitude = e.lngLat.lng;
       markerDialogOpen.value = true;
     });
 
-    // Listen for map movement to update visible markers
     mapInstance.value.on('moveend', updateVisibleMarkers);
     mapInstance.value.on('zoomend', updateVisibleMarkers);
 
-    // Add markers once map is loaded
     mapInstance.value.on('load', addMarkersToMap);
     
-    // Set up theme change detection
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (
           mutation.attributeName === 'class' && 
           mutation.target === document.documentElement
         ) {
-          // Update map style when theme changes
           if (mapInstance.value && mapInstance.value.loaded) {
             mapInstance.value.setStyle(mapStyle.value);
             
