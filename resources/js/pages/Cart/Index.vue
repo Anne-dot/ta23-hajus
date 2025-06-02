@@ -26,7 +26,7 @@ interface CartItem {
 }
 
 interface Props {
-    cart: Record<string, CartItem>;
+    cartItems: Record<string, CartItem>;
     total: number;
     itemCount: number;
 }
@@ -46,9 +46,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 // Convert cart object to array for easier iteration
-const cartItems = computed(() => {
-    if (!props.cart) return [];
-    return Object.values(props.cart);
+const cartItemsArray = computed(() => {
+    if (!props.cartItems) return [];
+    return Object.values(props.cartItems);
 });
 
 // Update quantity
@@ -143,7 +143,7 @@ const handleCheckout = () => {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                <TableRow v-for="item in cartItems" :key="item.id">
+                                <TableRow v-for="item in cartItemsArray" :key="item.id">
                                     <TableCell>
                                         <img 
                                             :src="`https://picsum.photos/seed/product-${item.id}/640/480`"
@@ -211,7 +211,7 @@ const handleCheckout = () => {
 
                 <!-- Mobile: Card View -->
                 <div class="lg:col-span-2 md:hidden space-y-4">
-                    <Card v-for="item in cartItems" :key="item.id">
+                    <Card v-for="item in cartItemsArray" :key="item.id">
                         <CardContent class="p-4">
                             <div class="flex gap-4">
                                 <img 

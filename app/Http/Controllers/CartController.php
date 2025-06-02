@@ -20,7 +20,7 @@ class CartController extends Controller
         });
 
         return Inertia::render('Cart/Index', [
-            'cart' => $cart,
+            'cartItems' => $cart,
             'total' => $total,
             'itemCount' => collect($cart)->sum('quantity'),
         ]);
