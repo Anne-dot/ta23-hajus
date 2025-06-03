@@ -19,9 +19,3 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Emotions API routes
-Route::apiResource('subjects', SubjectController::class);
-
-// Additional emotion routes
-Route::get('subjects/stats', [SubjectController::class, 'stats']);
-Route::get('subjects/random', [SubjectController::class, 'random']);

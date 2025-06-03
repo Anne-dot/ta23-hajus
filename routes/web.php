@@ -40,19 +40,18 @@ Route::resource('comments', CommetnController::class)->parameters([
     'comments' => 'commetn',
 ]);
 
-Route::get('/subjects', [SubjectController::class, 'index'])->name('subjects.index');
+Route::get('/subjects', [SubjectController::class, 'index']);
 Route::get('/subjects/create', [SubjectController::class, 'create'])->name('subjects.create');
-
 Route::post('/subjects', [SubjectController::class, 'store'])->name('subjects.store');
 
-Route::get('display-subjects', function () {
+Route::get('/display-subjects', function () {
     $datasets = [
         'andrus' => [
             'href' => 'https://hajus.ta23raamat.itmajakas.ee/api/movies',
             'custom_fields' => ['director', 'title', 'release_year'],
         ],
         'emotions' => [
-            'href' => 'http://127.0.0.1:8000/subjects',
+            'href' => url('/subjects'),
             'custom_fields' => ['title', 'category', 'emoji', 'intensity'],
         ],
         'henrik' => [
