@@ -143,11 +143,11 @@ const rightNavItems: NavItem[] = [
 
                         <!-- Cart Icon -->
                         <Link :href="route('cart.index')" class="relative">
-                            <Button variant="ghost" size="icon" class="group h-9 w-9 cursor-pointer relative">
+                            <Button variant="ghost" size="icon" class="group relative h-9 w-9 cursor-pointer">
                                 <ShoppingCart class="size-5 opacity-80 group-hover:opacity-100" />
-                                <span 
+                                <span
                                     v-if="cartCount > 0"
-                                    class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold"
+                                    class="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-semibold text-white"
                                 >
                                     {{ cartCount }}
                                 </span>

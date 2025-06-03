@@ -11,8 +11,6 @@ class MyFavoriteSubject extends Model
     use HasFactory;
 
     protected $table = 'my_favorite_subject';
-    
+
     protected $guarded = [];
 }
-
-

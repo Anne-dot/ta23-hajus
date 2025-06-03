@@ -1,31 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useForm } from 'vee-validate'
-import { toTypedSchema } from '@vee-validate/zod'
-import * as z from 'zod'
-import { router } from '@inertiajs/vue3'
-import AppLayout from '@/layouts/AppLayout.vue'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from '@/components/ui/form'
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select'
-import { BreadcrumbItem } from '@/types'
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import AppLayout from '@/layouts/AppLayout.vue';
+import { BreadcrumbItem } from '@/types';
+import { router } from '@inertiajs/vue3';
+import { toTypedSchema } from '@vee-validate/zod';
+import { useForm } from 'vee-validate';
+import { ref } from 'vue';
+import * as z from 'zod';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -38,7 +24,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const processing = ref(false)
+const processing = ref(false);
 
 const formSchema = toTypedSchema(
     z.object({
@@ -48,8 +34,8 @@ const formSchema = toTypedSchema(
         emoji: z.string().optional(),
         intensity: z.number().min(1).max(10).default(5),
         color: z.string().optional(),
-    })
-)
+    }),
+);
 
 const form = useForm({
     validationSchema: formSchema,
@@ -61,20 +47,20 @@ const form = useForm({
         intensity: 5,
         color: '#FFD700',
     },
-})
+});
 
 const onSubmit = form.handleSubmit((values) => {
-    processing.value = true
-    
+    processing.value = true;
+
     router.post('/subjects', values, {
         onFinish: () => {
-            processing.value = false
+            processing.value = false;
         },
         onSuccess: () => {
-            router.visit('/display-subjects')
+            router.visit('/display-subjects');
         },
-    })
-})
+    });
+});
 </script>
 
 <template>
@@ -93,11 +79,7 @@ const onSubmit = form.handleSubmit((values) => {
                                 <FormItem>
                                     <FormLabel>Emotion Name</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            type="text"
-                                            placeholder="e.g., Joyful"
-                                            v-bind="componentField"
-                                        />
+                                        <Input type="text" placeholder="e.g., Joyful" v-bind="componentField" />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -129,13 +111,7 @@ const onSubmit = form.handleSubmit((values) => {
                                 <FormItem>
                                     <FormLabel>Emoji</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            type="text"
-                                            placeholder="😊"
-                                            maxlength="2"
-                                            class="text-2xl text-center"
-                                            v-bind="componentField"
-                                        />
+                                        <Input type="text" placeholder="😊" maxlength="2" class="text-center text-2xl" v-bind="componentField" />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -154,9 +130,7 @@ const onSubmit = form.handleSubmit((values) => {
                                         v-bind="componentField"
                                     />
                                 </FormControl>
-                                <FormDescription>
-                                    {{ form.values.description?.length || 0 }}/150 characters
-                                </FormDescription>
+                                <FormDescription> {{ form.values.description?.length || 0 }}/150 characters </FormDescription>
                                 <FormMessage />
                             </FormItem>
                         </FormField>
@@ -167,17 +141,9 @@ const onSubmit = form.handleSubmit((values) => {
                                 <FormItem>
                                     <FormLabel>Intensity Level (1-10)</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            type="number"
-                                            :min="1"
-                                            :max="10"
-                                            placeholder="5"
-                                            v-bind="componentField"
-                                        />
+                                        <Input type="number" :min="1" :max="10" placeholder="5" v-bind="componentField" />
                                     </FormControl>
-                                    <FormDescription>
-                                        Rate the intensity from 1 (mild) to 10 (extreme)
-                                    </FormDescription>
+                                    <FormDescription> Rate the intensity from 1 (mild) to 10 (extreme) </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             </FormField>
@@ -187,19 +153,10 @@ const onSubmit = form.handleSubmit((values) => {
                                     <FormLabel>Color</FormLabel>
                                     <div class="flex gap-2">
                                         <FormControl>
-                                            <Input
-                                                type="color"
-                                                class="w-16 h-10 p-1 cursor-pointer"
-                                                v-bind="componentField"
-                                            />
+                                            <Input type="color" class="h-10 w-16 cursor-pointer p-1" v-bind="componentField" />
                                         </FormControl>
                                         <FormControl>
-                                            <Input
-                                                type="text"
-                                                placeholder="#FFD700"
-                                                class="flex-1"
-                                                v-bind="componentField"
-                                            />
+                                            <Input type="text" placeholder="#FFD700" class="flex-1" v-bind="componentField" />
                                         </FormControl>
                                     </div>
                                     <FormMessage />
@@ -208,17 +165,8 @@ const onSubmit = form.handleSubmit((values) => {
                         </div>
                     </CardContent>
                     <CardFooter class="flex justify-end gap-2">
-                        <Button 
-                            type="button" 
-                            variant="outline"
-                            @click="router.visit('/display-subjects')"
-                        >
-                            Cancel
-                        </Button>
-                        <Button 
-                            type="submit" 
-                            :disabled="processing"
-                        >
+                        <Button type="button" variant="outline" @click="router.visit('/display-subjects')"> Cancel </Button>
+                        <Button type="submit" :disabled="processing">
                             {{ processing ? 'Creating...' : 'Create Emotion' }}
                         </Button>
                     </CardFooter>

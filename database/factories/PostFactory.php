@@ -16,15 +16,15 @@ class PostFactory extends Factory
      */
     public function definition(): array
     {
-        
-    //     Schema::create('posts', function (Blueprint $table) {
-    //         $table->id();
-    //         $table->foreignId('user_id')->constrained()->after('id');
-    //         $table->string('title');
-    //         $table->text('description');
-    //         $table->timestamps();
-    //     });
-    // }
+
+        //     Schema::create('posts', function (Blueprint $table) {
+        //         $table->id();
+        //         $table->foreignId('user_id')->constrained()->after('id');
+        //         $table->string('title');
+        //         $table->text('description');
+        //         $table->timestamps();
+        //     });
+        // }
 
         return [
             'title' => fake()->sentence(),

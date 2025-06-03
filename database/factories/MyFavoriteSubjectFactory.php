@@ -90,7 +90,7 @@ class MyFavoriteSubjectFactory extends Factory
     {
         $category = $this->faker->randomElement(array_keys($this->emotions));
         $categoryData = $this->emotions[$category];
-        
+
         return [
             'title' => $this->faker->randomElement($categoryData['titles']),
             'description' => $this->faker->randomElement($this->descriptions[$category]),

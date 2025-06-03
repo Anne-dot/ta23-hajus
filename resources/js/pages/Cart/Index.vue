@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { router, usePage } from '@inertiajs/vue3';
-import { computed, ref, watch } from 'vue';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { BreadcrumbItem } from '@/types';
+import Button from '@/components/ui/button/Button.vue';
 import Card from '@/components/ui/card/Card.vue';
 import CardContent from '@/components/ui/card/CardContent.vue';
+import CardFooter from '@/components/ui/card/CardFooter.vue';
 import CardHeader from '@/components/ui/card/CardHeader.vue';
 import CardTitle from '@/components/ui/card/CardTitle.vue';
-import CardFooter from '@/components/ui/card/CardFooter.vue';
-import Button from '@/components/ui/button/Button.vue';
 import Table from '@/components/ui/table/Table.vue';
 import TableBody from '@/components/ui/table/TableBody.vue';
 import TableCell from '@/components/ui/table/TableCell.vue';
 import TableHead from '@/components/ui/table/TableHead.vue';
 import TableHeader from '@/components/ui/table/TableHeader.vue';
 import TableRow from '@/components/ui/table/TableRow.vue';
-import { Trash2, Plus, Minus, ShoppingCart } from 'lucide-vue-next';
+import AppLayout from '@/layouts/AppLayout.vue';
+import { BreadcrumbItem } from '@/types';
+import { router, usePage } from '@inertiajs/vue3';
+import { Minus, Plus, ShoppingCart, Trash2 } from 'lucide-vue-next';
+import { computed, ref, watch } from 'vue';
 
 interface CartItem {
     id: number;
@@ -48,43 +48,47 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-watch(() => page.props.flash.error, (error) => {
-    if (error) {
-        errorMessage.value = error as string;
-        showError.value = true;
-        setTimeout(() => {
+watch(
+    () => page.props.flash.error,
+    (error) => {
+        if (error) {
+            errorMessage.value = error as string;
+            showError.value = true;
+            setTimeout(() => {
+                showError.value = false;
+            }, 3000);
+        }
+    },
+);
+
+watch(
+    () => page.props.flash.success,
+    (success) => {
+        if (success) {
             showError.value = false;
-        }, 3000);
-    }
-});
+        }
+    },
+);
 
-watch(() => page.props.flash.success, (success) => {
-    if (success) {
-        showError.value = false;
-    }
-});
-
-// Convert cart object to array for easier iteration
 const cartItemsArray = computed(() => {
     if (!props.cartItems) return [];
     return Object.values(props.cartItems);
 });
 
-// Update quantity
 const updateQuantity = (productId: number, quantity: number) => {
     if (quantity > 0) {
-        console.log('Updating product:', productId, 'to quantity:', quantity);
-        router.patch(route('cart.update', productId), {
-            quantity: quantity
-        }, {
-            preserveScroll: true,
-            onSuccess: () => {
-                console.log('Update successful');
+        router.patch(
+            route('cart.update', productId),
+            {
+                quantity: quantity,
             },
-            onError: (errors) => {
-                console.error('Update error:', errors);
-            }
-        });
+            {
+                preserveScroll: true,
+                onError: (errors) => {
+                    console.error('Update error:', errors);
+                },
+            },
+        );
     }
 };
 
@@ -94,7 +98,7 @@ const removeItem = (productId: number) => {
         preserveScroll: true,
         onError: (errors) => {
             console.error('Delete error:', errors);
-        }
+        },
     });
 };
 
@@ -102,18 +106,16 @@ const removeItem = (productId: number) => {
 const clearCart = () => {
     if (confirm('Are you sure you want to clear your cart?')) {
         router.delete(route('cart.clear'), {
-            preserveScroll: true
+            preserveScroll: true,
         });
     }
 };
 
-// Handle checkout - create and submit a form for full page redirect
 const handleCheckout = () => {
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = route('checkout');
-    
-    // Add CSRF token
+
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
     if (csrfToken) {
         const input = document.createElement('input');
@@ -122,7 +124,7 @@ const handleCheckout = () => {
         input.value = csrfToken;
         form.appendChild(input);
     }
-    
+
     document.body.appendChild(form);
     form.submit();
 };
@@ -131,36 +133,41 @@ const handleCheckout = () => {
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
         <!-- Error Toast -->
-        <div v-if="showError" 
-            class="fixed top-20 right-4 z-50 bg-pink-500 text-white px-6 py-4 rounded-lg shadow-lg transition-all duration-300"
-            :class="showError ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'">
+        <div
+            v-if="showError"
+            class="fixed right-4 top-20 z-50 rounded-lg bg-pink-500 px-6 py-4 text-white shadow-lg transition-all duration-300"
+            :class="showError ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'"
+        >
             <div class="flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
                 </svg>
                 <p class="font-medium">{{ errorMessage }}</p>
             </div>
         </div>
-        
+
         <div class="mx-auto my-12 w-full max-w-7xl px-4">
-            <div class="flex items-center gap-3 mb-8">
+            <div class="mb-8 flex items-center gap-3">
                 <ShoppingCart class="h-8 w-8" />
                 <h1 class="text-3xl font-bold tracking-tight">Shopping Cart</h1>
             </div>
 
             <!-- Empty Cart -->
             <div v-if="props.itemCount === 0" class="flex flex-col items-center justify-center py-16">
-                <ShoppingCart class="h-16 w-16 text-muted-foreground mb-4" />
-                <p class="text-xl text-muted-foreground mb-6">Your cart is empty</p>
-                <Button size="lg" @click="router.visit('/products')">
-                    Start Shopping
-                </Button>
+                <ShoppingCart class="mb-4 h-16 w-16 text-muted-foreground" />
+                <p class="mb-6 text-xl text-muted-foreground">Your cart is empty</p>
+                <Button size="lg" @click="router.visit('/products')"> Start Shopping </Button>
             </div>
 
             <!-- Cart with Items -->
             <div v-else class="grid gap-8 lg:grid-cols-3">
                 <!-- Desktop: Table View -->
-                <div class="lg:col-span-2 hidden md:block">
+                <div class="hidden md:block lg:col-span-2">
                     <Card>
                         <Table>
                             <TableHeader>
@@ -176,10 +183,10 @@ const handleCheckout = () => {
                             <TableBody>
                                 <TableRow v-for="item in cartItemsArray" :key="item.id">
                                     <TableCell>
-                                        <img 
+                                        <img
                                             :src="`https://picsum.photos/seed/product-${item.id}/640/480`"
                                             :alt="item.name"
-                                            class="w-20 h-20 object-cover rounded"
+                                            class="h-20 w-20 rounded object-cover"
                                         />
                                     </TableCell>
                                     <TableCell>
@@ -190,8 +197,8 @@ const handleCheckout = () => {
                                     </TableCell>
                                     <TableCell>
                                         <div class="flex items-center justify-center gap-2">
-                                            <Button 
-                                                size="icon" 
+                                            <Button
+                                                size="icon"
                                                 variant="outline"
                                                 class="h-8 w-8"
                                                 @click="updateQuantity(item.id, item.quantity - 1)"
@@ -200,27 +207,15 @@ const handleCheckout = () => {
                                                 <Minus class="h-4 w-4" />
                                             </Button>
                                             <span class="w-12 text-center font-medium">{{ item.quantity }}</span>
-                                            <Button 
-                                                size="icon" 
-                                                variant="outline"
-                                                class="h-8 w-8"
-                                                @click="updateQuantity(item.id, item.quantity + 1)"
-                                            >
+                                            <Button size="icon" variant="outline" class="h-8 w-8" @click="updateQuantity(item.id, item.quantity + 1)">
                                                 <Plus class="h-4 w-4" />
                                             </Button>
                                         </div>
                                     </TableCell>
                                     <TableCell class="text-right">€{{ item.price.toFixed(2) }}</TableCell>
-                                    <TableCell class="text-right font-medium">
-                                        €{{ (item.price * item.quantity).toFixed(2) }}
-                                    </TableCell>
+                                    <TableCell class="text-right font-medium"> €{{ (item.price * item.quantity).toFixed(2) }} </TableCell>
                                     <TableCell>
-                                        <Button 
-                                            size="icon" 
-                                            variant="ghost"
-                                            class="h-8 w-8"
-                                            @click="removeItem(item.id)"
-                                        >
+                                        <Button size="icon" variant="ghost" class="h-8 w-8" @click="removeItem(item.id)">
                                             <Trash2 class="h-4 w-4 text-destructive" />
                                         </Button>
                                     </TableCell>
@@ -230,34 +225,30 @@ const handleCheckout = () => {
                     </Card>
 
                     <!-- Action Buttons -->
-                    <div class="flex justify-between items-center mt-4">
-                        <Button variant="outline" @click="router.visit('/products')">
-                            Continue Shopping
-                        </Button>
-                        <Button variant="outline" @click="clearCart" class="text-destructive">
-                            Clear Cart
-                        </Button>
+                    <div class="mt-4 flex items-center justify-between">
+                        <Button variant="outline" @click="router.visit('/products')"> Continue Shopping </Button>
+                        <Button variant="outline" @click="clearCart" class="text-destructive"> Clear Cart </Button>
                     </div>
                 </div>
 
                 <!-- Mobile: Card View -->
-                <div class="lg:col-span-2 md:hidden space-y-4">
+                <div class="space-y-4 md:hidden lg:col-span-2">
                     <Card v-for="item in cartItemsArray" :key="item.id">
                         <CardContent class="p-4">
                             <div class="flex gap-4">
-                                <img 
+                                <img
                                     :src="`https://picsum.photos/seed/product-${item.id}/640/480`"
                                     :alt="item.name"
-                                    class="w-24 h-24 object-cover rounded"
+                                    class="h-24 w-24 rounded object-cover"
                                 />
                                 <div class="flex-1 space-y-2">
                                     <h3 class="font-semibold">{{ item.name }}</h3>
                                     <p class="text-sm text-muted-foreground">€{{ item.price.toFixed(2) }} each</p>
-                                    
+
                                     <!-- Quantity Controls -->
                                     <div class="flex items-center gap-2">
-                                        <Button 
-                                            size="icon" 
+                                        <Button
+                                            size="icon"
                                             variant="outline"
                                             class="h-8 w-8"
                                             @click="updateQuantity(item.id, item.quantity - 1)"
@@ -266,26 +257,16 @@ const handleCheckout = () => {
                                             <Minus class="h-3 w-3" />
                                         </Button>
                                         <span class="w-8 text-center text-sm">{{ item.quantity }}</span>
-                                        <Button 
-                                            size="icon" 
-                                            variant="outline"
-                                            class="h-8 w-8"
-                                            @click="updateQuantity(item.id, item.quantity + 1)"
-                                        >
+                                        <Button size="icon" variant="outline" class="h-8 w-8" @click="updateQuantity(item.id, item.quantity + 1)">
                                             <Plus class="h-3 w-3" />
                                         </Button>
-                                        <Button 
-                                            size="icon" 
-                                            variant="ghost"
-                                            class="h-8 w-8 ml-auto"
-                                            @click="removeItem(item.id)"
-                                        >
+                                        <Button size="icon" variant="ghost" class="ml-auto h-8 w-8" @click="removeItem(item.id)">
                                             <Trash2 class="h-4 w-4 text-destructive" />
                                         </Button>
                                     </div>
                                 </div>
                             </div>
-                            <div class="mt-3 pt-3 border-t flex justify-between">
+                            <div class="mt-3 flex justify-between border-t pt-3">
                                 <span class="text-sm text-muted-foreground">Subtotal</span>
                                 <span class="font-semibold">€{{ (item.price * item.quantity).toFixed(2) }}</span>
                             </div>
@@ -294,12 +275,8 @@ const handleCheckout = () => {
 
                     <!-- Mobile Action Buttons -->
                     <div class="flex flex-col gap-2">
-                        <Button variant="outline" @click="router.visit('/products')">
-                            Continue Shopping
-                        </Button>
-                        <Button variant="outline" @click="clearCart" class="text-destructive">
-                            Clear Cart
-                        </Button>
+                        <Button variant="outline" @click="router.visit('/products')"> Continue Shopping </Button>
+                        <Button variant="outline" @click="clearCart" class="text-destructive"> Clear Cart </Button>
                     </div>
                 </div>
 
@@ -320,7 +297,7 @@ const handleCheckout = () => {
                                     <span class="text-green-600">Free</span>
                                 </div>
                             </div>
-                            
+
                             <div class="border-t pt-4">
                                 <div class="flex justify-between">
                                     <span class="text-lg font-semibold">Total</span>
@@ -329,14 +306,7 @@ const handleCheckout = () => {
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button 
-                                @click="handleCheckout"
-                                class="w-full" 
-                                size="lg" 
-                                :disabled="props.itemCount === 0"
-                            >
-                                Proceed to Checkout
-                            </Button>
+                            <Button @click="handleCheckout" class="w-full" size="lg" :disabled="props.itemCount === 0"> Proceed to Checkout </Button>
                         </CardFooter>
                     </Card>
 

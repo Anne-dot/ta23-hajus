@@ -36,8 +36,10 @@ class MarkerController extends Controller
         ]);
 
         $marker = Marker::create($validated);
+
         return redirect()->route('dashboard');
     }
+
     /**
      * Display the specified resource.
      */
@@ -73,13 +75,13 @@ class MarkerController extends Controller
         return redirect()->route('dashboard');
     }
 
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Marker $marker)
-{
-    $marker->delete();
-    return redirect()->route('dashboard');
-}
+    {
+        $marker->delete();
+
+        return redirect()->route('dashboard');
+    }
 }

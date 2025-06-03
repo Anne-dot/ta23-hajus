@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    use HasFactory;  
+    use HasFactory;
 
     protected $guarded = [];
 
@@ -22,7 +22,6 @@ class Post extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 
     public function getCreatedAtForHumansAttribute()
     {

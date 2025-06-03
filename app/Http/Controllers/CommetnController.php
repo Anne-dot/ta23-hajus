@@ -32,11 +32,11 @@ class CommetnController extends Controller
             'post_id' => 'required|exists:posts,id',
             'comment' => 'required',
         ]);
-        
+
         $validated['user_id'] = auth()->id();
-        
+
         Commetn::create($validated);
-        
+
         return back();
     }
 
@@ -70,12 +70,12 @@ class CommetnController extends Controller
     public function destroy(Commetn $commetn)
     {
         // Allow users to delete their own comments OR admins to delete any comment
-        if (auth()->id() !== $commetn->user_id && !auth()->user()->is_admin) {
+        if (auth()->id() !== $commetn->user_id && ! auth()->user()->is_admin) {
             abort(403);
         }
-        
+
         $commetn->delete();
-        
+
         return back();
     }
 }

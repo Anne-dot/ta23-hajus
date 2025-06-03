@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\MyFavoriteSubject;
 use App\Models\Post;
 use App\Models\User;
-use App\Models\MyFavoriteSubject;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'test@test.test',
                 'password' => Hash::make('test@test.test'),
-                'is_admin' => false
+                'is_admin' => false,
             ]
         );
 
@@ -31,15 +31,15 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'admin@test.test',
                 'password' => Hash::make('admin@test.test'),
-                'is_admin' => true
+                'is_admin' => true,
             ]
         );
 
         $users = User::all();
-        
-        for ($i = 0; $i <30; $i++) {
+
+        for ($i = 0; $i < 30; $i++) {
             Post::factory()->create([
-                'user_id' => $users->random()->id
+                'user_id' => $users->random()->id,
             ]);
         }
 

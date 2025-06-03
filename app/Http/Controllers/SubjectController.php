@@ -35,7 +35,7 @@ class SubjectController extends Controller
             'category' => 'required',
             'emoji' => 'nullable|string|max:2',
             'intensity' => 'required|integer|min:1|max:10',
-            'color' => 'nullable|string|max:7'
+            'color' => 'nullable|string|max:7',
         ]);
 
         MyFavoriteSubject::create($validated);

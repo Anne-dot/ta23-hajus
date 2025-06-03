@@ -20,8 +20,8 @@ class ProductFactory extends Factory
             'name' => fake()->words(3, true),
             'price' => fake()->randomFloat(2, 10, 99.99),
             'description' => fake()->paragraph(),
-            'image' => 'https://picsum.photos/640/480?random=' . fake()->randomNumber(),
-            'quantity' => fake()->numberBetween(2,50),
+            'image' => 'https://picsum.photos/640/480?random='.fake()->randomNumber(),
+            'quantity' => fake()->numberBetween(2, 50),
         ];
     }
 }

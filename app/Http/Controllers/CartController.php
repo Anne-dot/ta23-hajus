@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Session;
+use Inertia\Inertia;
 
 class CartController extends Controller
 {
@@ -33,7 +33,7 @@ class CartController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1'
+            'quantity' => 'required|integer|min:1',
         ]);
 
         $product = Product::find($request->product_id);
@@ -47,6 +47,7 @@ class CartController extends Controller
             if ($availableToAdd <= 0) {
                 return redirect()->back()->with('error', 'Cannot add more items. You already have the maximum available stock in your cart.');
             }
+
             return redirect()->back()->with('error', "Only {$availableToAdd} more items available. Current stock: {$product->quantity}");
         }
 
@@ -74,31 +75,32 @@ class CartController extends Controller
     public function update(Request $request, $productId)
     {
         $request->validate([
-            'quantity' => 'required|integer|min:1'
+            'quantity' => 'required|integer|min:1',
         ]);
 
         $cart = session('cart', []);
         $product = Product::find($productId);
-        
-        if (!$product) {
+
+        if (! $product) {
             return redirect()->route('cart.index')->with('error', 'Product not found!');
         }
-        
+
         if ($request->quantity > $product->quantity) {
             return redirect()->route('cart.index')->with('error', "Only {$product->quantity} items available in stock!");
         }
-        
+
         $key = null;
         if (isset($cart[$productId])) {
             $key = $productId;
-        } elseif (isset($cart[(string)$productId])) {
-            $key = (string)$productId;
+        } elseif (isset($cart[(string) $productId])) {
+            $key = (string) $productId;
         }
-        
+
         if ($key !== null) {
             $cart[$key]['quantity'] = $request->quantity;
             session(['cart' => $cart]);
             Session::save();
+
             return redirect()->route('cart.index')->with('success', 'Cart updated!');
         }
 
@@ -111,15 +113,15 @@ class CartController extends Controller
     public function destroy($productId)
     {
         $cart = session('cart', []);
-        
+
         if (isset($cart[$productId])) {
             unset($cart[$productId]);
             session(['cart' => $cart]);
-        } elseif (isset($cart[(string)$productId])) {
-            unset($cart[(string)$productId]);
+        } elseif (isset($cart[(string) $productId])) {
+            unset($cart[(string) $productId]);
             session(['cart' => $cart]);
         }
-        
+
         Session::save();
 
         return redirect()->route('cart.index')->with('success', 'Product removed from cart!');
@@ -132,7 +134,7 @@ class CartController extends Controller
     {
         session()->forget('cart');
         Session::save();
-        
+
         return redirect()->route('cart.index')->with('success', 'Cart cleared!');
     }
 }

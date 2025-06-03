@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class PostController extends Controller
 {
@@ -13,23 +13,23 @@ class PostController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-{
-    return Inertia::render('post/Index', [
-        'posts' => Post::with('user')
-            ->latest()
-            ->paginate(10)
-            ->through(fn ($post) => [
-                'id' => $post->id,
-                'title' => $post->title,
-                'excerpt' => Str::limit($post->description, 100),
-                'created_at' => $post->created_at,
-                'created_at_for_humans' => $post->created_at_for_humans,
-                'user' => $post->user ? ['id' => $post->user->id, 'name' => $post->user->name] : null,
-                'is_owner' => $post->user_id === auth()->id(),
-                'can_edit' => $post->user_id === auth()->id() || auth()->user()?->is_admin,
-            ]),
-    ]);
-}
+    {
+        return Inertia::render('post/Index', [
+            'posts' => Post::with('user')
+                ->latest()
+                ->paginate(10)
+                ->through(fn ($post) => [
+                    'id' => $post->id,
+                    'title' => $post->title,
+                    'excerpt' => Str::limit($post->description, 100),
+                    'created_at' => $post->created_at,
+                    'created_at_for_humans' => $post->created_at_for_humans,
+                    'user' => $post->user ? ['id' => $post->user->id, 'name' => $post->user->name] : null,
+                    'is_owner' => $post->user_id === auth()->id(),
+                    'can_edit' => $post->user_id === auth()->id() || auth()->user()?->is_admin,
+                ]),
+        ]);
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -56,31 +56,30 @@ class PostController extends Controller
         return redirect()->route('posts.index');
     }
 
-
     /**
      * Display the specified resource.
      */
     public function show(Post $post)
     {
         $post->load([
-            'comments.user', 
+            'comments.user',
             'user']);
-        
+
         $previousPost = Post::where('id', '<', $post->id)
             ->orderBy('id', 'desc')
             ->first(['id', 'title']);
-            
+
         $nextPost = Post::where('id', '>', $post->id)
             ->orderBy('id', 'asc')
             ->first(['id', 'title']);
-        
+
         return Inertia::render('post/Show', [
             'post' => $post,
             'previousPost' => $previousPost,
             'nextPost' => $nextPost,
             'auth' => [
-                'user' => auth()->user()
-            ]
+                'user' => auth()->user(),
+            ],
         ]);
     }
 
@@ -89,28 +88,28 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        if (auth()->id() !== $post->user_id && !auth()->user()->is_admin) {
+        if (auth()->id() !== $post->user_id && ! auth()->user()->is_admin) {
             abort(403);
         }
-        
+
         return Inertia::render('post/Edit', [
-            'post' => $post
+            'post' => $post,
         ]);
     }
-    
+
     public function update(Request $request, Post $post)
     {
-        if (auth()->id() !== $post->user_id && !auth()->user()->is_admin) {
+        if (auth()->id() !== $post->user_id && ! auth()->user()->is_admin) {
             abort(403);
         }
-        
+
         $validated = $request->validate([
             'title' => 'required|max:255',
             'description' => 'required',
         ]);
-        
+
         $post->update($validated);
-        
+
         return redirect()->route('posts.show', $post);
     }
 
@@ -120,12 +119,12 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         // Optional: Add authorization check
-        if (auth()->id() !== $post->user_id && !auth()->user()->is_admin) {
+        if (auth()->id() !== $post->user_id && ! auth()->user()->is_admin) {
             abort(403);
         }
-        
+
         $post->delete();
-        
+
         return redirect()->route('posts.index');
     }
 }
