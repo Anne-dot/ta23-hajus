@@ -2,6 +2,120 @@
 
 A comprehensive Laravel application implementing multiple distributed systems features for the TA23 course project.
 
+## Application Architecture
+
+### Project Structure
+```
+ta23-hajus/
+├── app/                    # Laravel application logic
+│   ├── Http/Controllers/   # API and web controllers
+│   └── Models/            # Eloquent ORM models
+├── resources/
+│   ├── js/                # Vue components and pages
+│   │   ├── components/    # Reusable UI components
+│   │   └── pages/         # Inertia page components
+│   └── css/               # Tailwind CSS styles
+├── database/
+│   ├── migrations/        # Database schema migrations
+│   └── seeders/          # Test data generators
+├── routes/                # Route definitions
+└── public/               # Public directory (document root)
+```
+
+### Technology Stack
+
+- **Backend Framework**: Laravel 12 (PHP 8.3)
+- **Frontend Framework**: Vue 3 with TypeScript
+- **SPA Bridge**: Inertia.js
+- **CSS Framework**: Tailwind CSS
+- **UI Components**: shadcn-vue (Radix Vue based)
+- **Build Tool**: Vite
+- **Database**: SQLite (development), MySQL (production)
+- **External APIs**: 
+  - OpenWeatherMap API (weather data)
+  - Stripe API (payment processing)
+  - MapLibre GL (interactive maps)
+
+## Running the Application
+
+### Prerequisites
+- PHP >= 8.3
+- Composer
+- Node.js >= 18
+- NPM or Yarn
+- SQLite or MySQL
+
+### Installation Steps
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/ta23-hajus.git
+   cd ta23-hajus
+   ```
+
+2. **Install PHP dependencies**
+   ```bash
+   composer install
+   ```
+
+3. **Install JavaScript dependencies**
+   ```bash
+   npm install
+   ```
+
+4. **Configure environment**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+
+5. **Set up database**
+   ```bash
+   # For SQLite
+   touch database/database.sqlite
+   
+   # Run migrations with seed data
+   php artisan migrate --seed
+   ```
+
+6. **Configure API keys in .env**
+   ```env
+   WEATHER_API_KEY=your_openweathermap_api_key
+   STRIPE_KEY=your_stripe_publishable_key
+   STRIPE_SECRET=your_stripe_secret_key
+   ```
+
+7. **Start development servers**
+   ```bash
+   # Run both servers concurrently
+   composer run dev
+   
+   # OR run separately:
+   php artisan serve    # Laravel server (http://localhost:8000)
+   npm run dev         # Vite dev server
+   ```
+
+### Testing
+```bash
+# Run tests
+php artisan test
+
+# Code quality checks
+npm run lint
+npm run format:check
+```
+
+### Production Build
+```bash
+# Build assets
+npm run build
+
+# Optimize for production
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
 ## Project Overview
 
 This project implements the required features from the [Hajusrakendused course requirements](https://github.com/RalfHei/Hajusrakendused):
@@ -27,13 +141,12 @@ This project implements the required features from the [Hajusrakendused course r
    - Admin can manage all posts and comments
 
 4. **Custom API - Emotions** ✓
-   - Database table: `my_favorite_subject` (follows course requirement)
-   - Display page implemented (/display-subjects)
-   - Grid layout with colorful cards
-   - Create form with working POST functionality
-   - Intensity input using number field (1-10)
+   - Database table: `my_favorite_subject` 
+   - Display page at /display-subjects with colorful emotion cards
+   - Create form for adding new emotions
    - JSON API endpoint at /subjects
-   - Categories: happy, sad, angry, fear, surprised, love
+   - 6 emotion categories: happy, sad, angry, fear, surprised, love
+   - 70 pre-seeded emotions with emojis and colors
 
 ### 🚧 In Progress
 
@@ -66,15 +179,6 @@ This project implements the required features from the [Hajusrakendused course r
    - Success page after payment completion
 
 
-## Technical Stack
-
-- **Backend**: Laravel 12.x, PHP 8.3
-- **Frontend**: Vue 3, TypeScript, Inertia.js
-- **UI Components**: shadcn-vue (Radix Vue based)
-- **Styling**: Tailwind CSS
-- **Database**: SQLite
-- **Build Tools**: Vite
-- **Maps**: MapLibre GL
 
 ## Deployment Ready
 
