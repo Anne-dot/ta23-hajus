@@ -7,7 +7,6 @@ import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-    base: '/hajus-ta23/',
     plugins: [
         laravel({
             input: ['resources/js/app.ts'],

@@ -24,7 +24,9 @@ yarn-error.log
 /.zed
 BLOG_TEST_PROTOCOL.md
 CLAUDE.md
-DEPLOYMENT_CHECKLIST.md
-ZONE_DEPLOYMENT_GUIDE_backup.md
-GITHUB_TO_ZONE_DEPLOYMENT.md
-PHP_DEPLOYER_GUIDE.md
+
+# Deployment files
+zone-production.env.backup
+*.env.backup
+ta23-hajus-*.zip
+*-deploy.zip
