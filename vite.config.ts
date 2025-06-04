@@ -7,7 +7,7 @@ import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-    base: process.env.APP_ENV === 'production' ? '/hajus-ta23/' : '/',
+    base: '/hajus-ta23/',
     plugins: [
         laravel({
             input: ['resources/js/app.ts'],
