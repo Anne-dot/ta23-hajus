@@ -171,7 +171,7 @@ function deleteComment(id: number): void {
             <!-- Comment section -->
             <div class="mt-8">
                 <h2 class="mb-4 text-xl font-semibold">Comments</h2>
-                <form @submit.prevent="submitComment">
+                <form v-if="auth.user" @submit.prevent="submitComment">
                     <div class="flex flex-col gap-2">
                         <div class="flex items-start gap-4">
                             <input type="hidden" v-model="commentForm.post_id" />
@@ -181,6 +181,9 @@ function deleteComment(id: number): void {
                         <InputError :message="commentForm.errors.comment" class="ml-1" />
                     </div>
                 </form>
+                <div v-else class="rounded-lg border bg-muted/50 p-4 text-center text-muted-foreground">
+                    <Link :href="route('login')" class="text-primary hover:underline">Sign in</Link> to leave a comment
+                </div>
             </div>
 
             <div class="mt-4 space-y-4">

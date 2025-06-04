@@ -5,7 +5,7 @@ import CardContent from '@/components/ui/card/CardContent.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { BreadcrumbItem } from '@/types';
 import { router, usePage } from '@inertiajs/vue3';
-import { ShoppingCart } from 'lucide-vue-next';
+import { Minus, Plus, ShoppingCart } from 'lucide-vue-next';
 import { ref, watch } from 'vue';
 
 interface Product {
@@ -33,6 +33,7 @@ const page = usePage();
 const justAdded = ref<Set<number>>(new Set());
 const errorMessage = ref<string>('');
 const showError = ref(false);
+const quantities = ref<Record<number, number>>({});
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -64,21 +65,34 @@ const handleImageError = (event: Event) => {
     target.src = 'https://via.placeholder.com/400x400/f3f4f6/9ca3af?text=No+Image';
 };
 
+// Get selected quantity or default to 1
+const getSelectedQuantity = (productId: number): number => {
+    return quantities.value[productId] || 1;
+};
+
+// Update quantity
+const updateQuantity = (productId: number, delta: number) => {
+    const current = getSelectedQuantity(productId);
+    const newQty = current + delta;
+    if (newQty >= 1 && newQty <= 10) {
+        quantities.value[productId] = newQty;
+    }
+};
+
 // Add to cart function
 const addToCart = (product: Product) => {
+    const quantity = getSelectedQuantity(product.id);
     router.post(
         route('cart.store'),
         {
             product_id: product.id,
-            quantity: 1,
+            quantity: quantity,
         },
         {
             preserveScroll: true,
             onSuccess: () => {
-                // Show overlay briefly
                 justAdded.value.add(product.id);
-
-                // Remove overlay after 1 second
+                quantities.value[product.id] = 1; // Reset quantity
                 setTimeout(() => {
                     justAdded.value.delete(product.id);
                 }, 1000);
@@ -187,10 +201,33 @@ const addToCart = (product: Product) => {
                         </p>
 
                         <!-- Price and Stock at bottom -->
-                        <div class="mt-auto">
+                        <div class="mt-auto space-y-4">
                             <div class="flex items-end justify-between">
                                 <span class="text-2xl font-bold text-card-foreground"> €{{ product.price }} </span>
                                 <span v-if="product.quantity > 0" class="text-sm text-muted-foreground"> {{ product.quantity }} in stock </span>
+                            </div>
+
+                            <!-- Quantity Selector -->
+                            <div v-if="product.quantity > 0" class="flex items-center justify-center gap-3 rounded-lg bg-muted/50 p-2">
+                                <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    class="h-8 w-8 hover:bg-pink-100 hover:text-pink-600"
+                                    @click="updateQuantity(product.id, -1)"
+                                    :disabled="getSelectedQuantity(product.id) <= 1"
+                                >
+                                    <Minus class="h-4 w-4" />
+                                </Button>
+                                <span class="w-12 text-center font-medium">{{ getSelectedQuantity(product.id) }}</span>
+                                <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    class="h-8 w-8 hover:bg-pink-100 hover:text-pink-600"
+                                    @click="updateQuantity(product.id, 1)"
+                                    :disabled="getSelectedQuantity(product.id) >= Math.min(10, product.quantity - getCartQuantity(product.id))"
+                                >
+                                    <Plus class="h-4 w-4" />
+                                </Button>
                             </div>
                         </div>
                     </CardContent>

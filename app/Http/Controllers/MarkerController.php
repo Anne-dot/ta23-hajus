@@ -69,8 +69,6 @@ class MarkerController extends Controller
         ]);
 
         $marker->update($validated);
-        $marker->edited = now();
-        $marker->save();
 
         return redirect()->route('dashboard');
     }

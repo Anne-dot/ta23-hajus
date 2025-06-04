@@ -42,7 +42,19 @@ const props = defineProps({
 });
 
 const form = useForm({ city: '' });
-const submit = () => form.get(route('dashboard'));
+const searchError = ref('');
+
+const submit = () => {
+    searchError.value = '';
+
+    if (!form.city.trim()) {
+        searchError.value = 'Please enter a city name to search for weather';
+        return;
+    }
+
+    form.get(route('dashboard'));
+};
+
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Dashboard', href: '/dashboard' }];
 
 // Map and markers
@@ -71,9 +83,9 @@ const createEnhancedPopupHTML = (marker: MarkerType): string => {
     const mutedColor = dark ? 'hsl(var(--muted-foreground))' : 'hsl(var(--muted-foreground))';
     const borderColor = dark ? 'hsl(var(--border))' : 'hsl(var(--border))';
     const buttonBgPrimary = dark ? 'hsl(var(--secondary))' : 'hsl(var(--secondary))';
-    const buttonBgDanger = dark ? 'hsl(var(--destructive)/15)' : 'hsl(var(--destructive)/15)';
+    const buttonBgDanger = dark ? 'hsl(var(--destructive))' : 'hsl(var(--destructive))';
     const buttonTextPrimary = dark ? 'hsl(var(--secondary-foreground))' : 'hsl(var(--secondary-foreground))';
-    const buttonTextDanger = dark ? 'hsl(var(--destructive-foreground))' : 'hsl(var(--destructive))';
+    const buttonTextDanger = 'white';
     const scrollbarTrackColor = dark ? 'hsl(var(--muted))' : 'hsl(var(--muted))';
     const scrollbarThumbColor = dark ? 'hsl(var(--border))' : 'hsl(var(--border))';
 
@@ -377,6 +389,7 @@ watch(
                             </div>
                         </form>
 
+                        <div v-if="searchError" class="mt-2 text-sm text-red-600">{{ searchError }}</div>
                         <div v-if="error" class="weather-error">{{ error }}</div>
 
                         <div v-if="weatherData" class="mt-4">

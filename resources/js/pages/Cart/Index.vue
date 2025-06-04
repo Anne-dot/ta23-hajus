@@ -112,6 +112,8 @@ const clearCart = () => {
 };
 
 const handleCheckout = () => {
+    // Use a regular form submission for Stripe redirect
+    // Inertia's router.post() uses AJAX which causes CORS issues with Stripe
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = route('checkout');
@@ -212,8 +214,8 @@ const handleCheckout = () => {
                                             </Button>
                                         </div>
                                     </TableCell>
-                                    <TableCell class="text-right">€{{ item.price.toFixed(2) }}</TableCell>
-                                    <TableCell class="text-right font-medium"> €{{ (item.price * item.quantity).toFixed(2) }} </TableCell>
+                                    <TableCell class="text-right">€{{ (item.price || 0).toFixed(2) }}</TableCell>
+                                    <TableCell class="text-right font-medium"> €{{ ((item.price || 0) * item.quantity).toFixed(2) }} </TableCell>
                                     <TableCell>
                                         <Button size="icon" variant="ghost" class="h-8 w-8" @click="removeItem(item.id)">
                                             <Trash2 class="h-4 w-4 text-destructive" />
@@ -243,7 +245,7 @@ const handleCheckout = () => {
                                 />
                                 <div class="flex-1 space-y-2">
                                     <h3 class="font-semibold">{{ item.name }}</h3>
-                                    <p class="text-sm text-muted-foreground">€{{ item.price.toFixed(2) }} each</p>
+                                    <p class="text-sm text-muted-foreground">€{{ (item.price || 0).toFixed(2) }} each</p>
 
                                     <!-- Quantity Controls -->
                                     <div class="flex items-center gap-2">
@@ -268,7 +270,7 @@ const handleCheckout = () => {
                             </div>
                             <div class="mt-3 flex justify-between border-t pt-3">
                                 <span class="text-sm text-muted-foreground">Subtotal</span>
-                                <span class="font-semibold">€{{ (item.price * item.quantity).toFixed(2) }}</span>
+                                <span class="font-semibold">€{{ ((item.price || 0) * item.quantity).toFixed(2) }}</span>
                             </div>
                         </CardContent>
                     </Card>
@@ -290,7 +292,7 @@ const handleCheckout = () => {
                             <div class="space-y-2">
                                 <div class="flex justify-between text-sm">
                                     <span class="text-muted-foreground">Subtotal ({{ props.itemCount }} items)</span>
-                                    <span>€{{ props.total.toFixed(2) }}</span>
+                                    <span>€{{ (props.total || 0).toFixed(2) }}</span>
                                 </div>
                                 <div class="flex justify-between text-sm">
                                     <span class="text-muted-foreground">Shipping</span>
@@ -301,7 +303,7 @@ const handleCheckout = () => {
                             <div class="border-t pt-4">
                                 <div class="flex justify-between">
                                     <span class="text-lg font-semibold">Total</span>
-                                    <span class="text-lg font-semibold">€{{ props.total.toFixed(2) }}</span>
+                                    <span class="text-lg font-semibold">€{{ (props.total || 0).toFixed(2) }}</span>
                                 </div>
                             </div>
                         </CardContent>

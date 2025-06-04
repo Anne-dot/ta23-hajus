@@ -1,5 +1,6 @@
 import '../css/app.css';
 
+import { useToast } from '@/components/ui/toast/use-toast';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
@@ -36,5 +37,24 @@ createInertiaApp({
     },
 });
 
-// This will set light / dark mode on page load...
 initializeTheme();
+
+document.addEventListener('DOMContentLoaded', () => {
+    const { toast } = useToast();
+
+    document.addEventListener('inertia:exception', (event: any) => {
+        if (event.detail.response?.status === 419) {
+            event.preventDefault();
+
+            toast({
+                title: 'Session Expired',
+                description: 'Your session has expired. Please refresh the page to continue.',
+                variant: 'destructive',
+                action: {
+                    label: 'Refresh',
+                    onClick: () => window.location.reload(),
+                },
+            });
+        }
+    });
+});

@@ -19,10 +19,13 @@ interface Post {
     };
 }
 
-defineProps<{
+const props = defineProps<{
     posts: Post[];
-    auth: object;
+    auth: any;
 }>();
+
+// Debug auth
+console.log('Auth prop:', props.auth);
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -38,10 +41,10 @@ const breadcrumbs: BreadcrumbItem[] = [
             <div class="mb-6 flex items-center justify-between">
                 <h1 class="text-2xl font-bold">Blog Posts</h1>
                 <Link
-                    href="/posts/create"
+                    :href="auth?.user?.id ? '/posts/create' : route('login')"
                     class="inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
                 >
-                    Create New Post
+                    {{ auth?.user?.id ? 'Create New Post' : 'Sign in to post' }}
                 </Link>
             </div>
 
@@ -119,10 +122,10 @@ const breadcrumbs: BreadcrumbItem[] = [
             <div v-else class="rounded-lg border bg-background py-12 text-center">
                 <p class="text-lg text-muted-foreground">No posts found.</p>
                 <Link
-                    href="/posts/create"
+                    :href="auth.user ? '/posts/create' : route('login')"
                     class="mt-4 inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
                 >
-                    Create your first post
+                    {{ auth?.user?.id ? 'Create your first post' : 'Sign in to post' }}
                 </Link>
             </div>
         </div>

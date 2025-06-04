@@ -106,30 +106,108 @@ Route::post('/checkout', function (Request $request) {
                 'price_data' => [
                     'currency' => 'eur',
                     'product_data' => ['name' => 'Order Total'],
-                    'unit_amount' => $total * 100, // Convert to cents
+                    'unit_amount' => $total * 100,
                 ],
                 'quantity' => 1,
             ]],
             'mode' => 'payment',
-            'success_url' => url('/checkout/success'),
-            'cancel_url' => url('/cart'),
+            'success_url' => route('checkout.confirm'),
+            'cancel_url' => route('cart.index'),
+            'metadata' => [
+                'user_id' => auth()->id() ?? 'guest',
+            ],
         ]);
 
-        return redirect($session->url);
-    } catch (\Exception $e) {
-        dd([
-            'error' => $e->getMessage(),
-            'stripe_key_exists' => ! empty(env('STRIPE_SECRET')),
-            'total' => $total ?? 0,
-            'cart' => $cart ?? [],
+        // Create order immediately with pending status
+        $order = \App\Models\Order::create([
+            'user_id' => auth()->id(),
+            'stripe_session_id' => $session->id,
+            'status' => 'pending',
+            'total_amount' => $total,
         ]);
+
+        foreach ($cart as $item) {
+            \App\Models\OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $item['id'],
+                'product_name' => $item['name'],
+                'price' => $item['price'],
+                'quantity' => $item['quantity'],
+                'total' => $item['price'] * $item['quantity'],
+            ]);
+        }
+
+        return redirect()->away($session->url);
+    } catch (\Exception $e) {
+        \Log::error('Checkout error: '.$e->getMessage());
+
+        return redirect()->route('cart.index')->with('error', 'Unable to process payment. Please try again later.');
     }
 })->name('checkout');
 
-Route::get('/checkout/success', function () {
-    session()->forget('cart');
+Route::get('/checkout/confirm', function () {
+    try {
+        if (! auth()->check()) {
+            return redirect()->route('cart.index')->with('error', 'Session expired. Please try checkout again');
+        }
 
-    return Inertia::render('Checkout/Success');
+        $order = \App\Models\Order::where('user_id', auth()->id())
+            ->where('status', 'pending')
+            ->where('created_at', '>', now()->subMinutes(10))
+            ->latest()
+            ->first();
+
+        if (! $order) {
+            return redirect()->route('cart.index')->with('error', 'No recent order found');
+        }
+
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        $stripeSession = \Stripe\Checkout\Session::retrieve($order->stripe_session_id);
+
+        if ($stripeSession->payment_status !== 'paid') {
+            return redirect()->route('cart.index')->with('error', 'Payment not completed');
+        }
+
+        $order->update([
+            'status' => 'completed',
+            'customer_email' => $stripeSession->customer_details->email,
+            'customer_name' => $stripeSession->customer_details->name,
+            'paid_at' => now(),
+        ]);
+
+        foreach ($order->items as $item) {
+            $product = \App\Models\Product::find($item->product_id);
+            if ($product) {
+                $product->decrement('quantity', $item->quantity);
+            }
+        }
+
+        session()->forget('cart');
+
+        return redirect()->route('checkout.success', ['order_id' => $order->id]);
+    } catch (\Exception $e) {
+        \Log::error('Checkout confirm error: '.$e->getMessage());
+
+        return redirect()->route('cart.index')->with('error', 'Unable to confirm payment');
+    }
+})->name('checkout.confirm');
+
+Route::get('/checkout/success', function (Request $request) {
+    $orderId = $request->get('order_id');
+
+    if (! $orderId) {
+        return redirect()->route('products.index');
+    }
+
+    $order = \App\Models\Order::with('items')->find($orderId);
+
+    if (! $order || ($order->user_id && $order->user_id !== auth()->id())) {
+        return redirect()->route('products.index');
+    }
+
+    return Inertia::render('Checkout/Success', [
+        'order' => $order,
+    ]);
 })->name('checkout.success');
 
 require __DIR__.'/settings.php';
