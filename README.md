@@ -2,6 +2,8 @@
 
 A comprehensive Laravel application implementing multiple distributed systems features for the TA23 course project.
 
+**Live Demo**: https://hajus.ta23ruusmann.itmajakas.ee/
+
 ## Application Architecture
 
 ### Project Structure
@@ -118,27 +120,32 @@ php artisan view:cache
 
 ## Project Overview
 
-This project implements the required features from the [Hajusrakendused course requirements](https://github.com/RalfHei/Hajusrakendused):
+This project implements all required features from the [Hajusrakendused course requirements](https://github.com/RalfHei/Hajusrakendused):
 
 ### ✅ Completed Features
 
 1. **Weather API Integration** ✓
-   - OpenWeatherMap API integration with caching
-   - Responsive weather dashboard component
-   - Real-time weather data display
+   - OpenWeatherMap API integration with 30-minute caching
+   - City-based weather search
+   - Real-time weather data display with icons
+   - Error handling for empty searches and invalid cities
+   - Responsive weather dashboard
 
 2. **Map Application** ✓
    - Interactive map using MapLibre GL
-   - Marker management (CRUD operations)
-   - Coordinate tracking and display
+   - Full CRUD operations for markers
+   - Click on map to add new markers
+   - Edit and delete functionality for existing markers
+   - MySQL-compatible coordinate storage
+   - Responsive map interface
 
 3. **Blog System** ✓
-   - Basic CRUD for posts implemented
-   - Comments system implemented (using "Commetn" table)
-   - Authentication middleware added
-   - Post factory and seeder created (30 posts with random users)
-   - Users can manage their own posts and comments
-   - Admin can manage all posts and comments
+   - Full CRUD for posts with authentication
+   - Comments system with user association
+   - Admin privileges for content management
+   - Guest users can view but not interact
+   - 30 pre-seeded posts with random users
+   - Pagination for post listings
 
 4. **Custom API - Emotions** ✓
    - Database table: `my_favorite_subject` 
@@ -148,51 +155,25 @@ This project implements the required features from the [Hajusrakendused course r
    - 6 emotion categories: happy, sad, angry, fear, surprised, love
    - 70 pre-seeded emotions with emojis and colors
 
-### 🚧 In Progress
-
-5. **E-commerce and Shopping Cart** (Development Started)
-   
-   **✅ Completed:**
-   - `Product` model with migration, factory, and seeder
-     - Fields: id, name, price, description, image, quantity, timestamps
-     - Factory generates product data with stable picsum images (seeded by product ID)
-     - Seeder creates 12 test products
-   - `ProductController` with `index()` method
-   - Product catalog route at `/products`
-   - Responsive product grid (1-4 columns based on screen size)
-     - Uses shadcn Card components
-     - Product images with "Add to Cart" button overlay
-     - Fixed height titles with text truncation
-     - Price and stock count display
-     - Hover effects and transitions
-     - Low stock indicators (shows "Only X left!" when stock is 1-3 items)
-     - Stock validation prevents over-ordering
-     - "Max in Cart" button state when all available stock is in cart
-     - Error toast notifications for stock limit messages
-   
-   **✅ Shopping Cart & Checkout**
-   - Session-based cart management
-   - Add/remove items with quantity controls
-   - Cart icon with live item count
-   - Responsive cart page with table (desktop) and card (mobile) views
-   - Stripe checkout integration (EUR currency)
-   - Success page after payment completion
+5. **E-commerce and Shopping Cart** ✓
+   - Product catalog with 12 seeded products
+   - Quantity selector on product cards with stock validation
+   - Session-based shopping cart with real-time updates
+   - Cart management (add, update quantities, remove items)
+   - Stripe payment integration with EUR currency
+   - Order persistence in database after successful payment
+   - Automatic stock updates after purchase
+   - Customer information captured from Stripe
+   - Responsive design for all screen sizes
+   - Error handling and user feedback
 
 
 
-## Deployment Ready
+## User Access
 
-The application is ready for deployment with the following completed features:
-- ✅ All required course features implemented
-- ✅ Stock validation and low stock indicators
-- ✅ Currency localized to Euro (€)
-- ✅ Error handling and user feedback
-- ✅ Stripe integration for payments
-
-**Pre-deployment tasks:**
-1. Complete manual testing of all features
-2. Test deployment readiness
-3. Deploy to Zone.ee hosting
+- **Guest Access**: Browse products, view blog posts, check weather, and see map markers
+- **User Registration**: Create an account to access full features (posting, commenting, shopping)
+- **Admin Features**: Special privileges for content management (seeded admin account available)
 
 ## Stripe Integration
 
@@ -232,237 +213,8 @@ The application is ready for deployment with the following completed features:
 - **Weather Icons**: Dynamic weather icons from OpenWeatherMap
 - **Theme Integration**: Styled to match application's existing theme system
 
-## Screenshots
 
-![Weather Dashboard Screenshot](screenshots/weather-dashboard.png)
 
-## Requirements
-
-- PHP 8.1+
-- Laravel 10+
-- Node.js & NPM
-- OpenWeatherMap API key
-
-## Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/laravel-weather-dashboard.git
-   cd laravel-weather-dashboard
-   ```
-
-2. Install PHP dependencies:
-   ```bash
-   composer install
-   ```
-
-3. Install NPM dependencies:
-   ```bash
-   npm install
-   ```
-
-4. Copy environment file and set up your database:
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
-
-5. Add your API keys to the .env file:
-   ```
-   WEATHER_API_KEY=your_api_key_here
-   STRIPE_KEY=your_stripe_publishable_key
-   STRIPE_SECRET=your_stripe_secret_key
-   ```
-
-6. Build assets:
-   ```bash
-   npm run dev
-   ```
-
-7. Start the development server:
-   ```bash
-   php artisan serve
-   ```
-
-8. Access the application at http://localhost:8000
-
-## Implementation Details
-
-### Backend Controller
-```php
-private function getWeatherData($city)
-{
-    try {
-        return Cache::remember("weather_{$city}", config('services.open_weather_map.cache_duration', 1800), function () use ($city) {
-            $response = Http::get("https://api.openweathermap.org/data/2.5/weather", [
-                'q' => $city,
-                'appid' => config('services.open_weather_map.key'),
-                'units' => 'metric',
-            ]);
-            
-            $data = $response->json();
-            
-            // Error handling...
-            
-            return $data;
-        });
-    } catch (\Exception $e) {
-        session()->flash('error', 'Connection failed: ' . $e->getMessage());
-        return null;
-    }
-}
-```
-
-### Configuration
-Add to your `config/services.php`:
-```php
-'open_weather_map' => [
-    'key' => env('WEATHER_API_KEY'),
-    'cache_duration' => env('OPENWEATHER_CACHE_DURATION', 1800),
-],
-```
-
-## Best Practices & References
-
-- **Laravel Documentation**: https://laravel.com/docs/12.x/documentation - Official guide for creating comprehensive API documentation in Laravel
-
-## Deployment Guide (Zone.ee)
-
-This project is deployed on Zone.ee hosting (school-provided account).
-
-### Pre-Deployment Checklist
-
-1. **Prepare your production environment file** (`.env.production`):
-   ```env
-   APP_NAME="TA23 Hajusrakendused"
-   APP_ENV=production
-   APP_DEBUG=false
-   APP_URL=https://yourdomain.zone.ee
-   
-   DB_CONNECTION=mysql
-   DB_HOST=localhost
-   DB_PORT=3306
-   DB_DATABASE=your_zone_database
-   DB_USERNAME=your_zone_username
-   DB_PASSWORD=your_zone_password
-   
-   WEATHER_API_KEY=your_openweathermap_api_key
-   ```
-
-2. **Optimize Laravel for production**:
-   ```bash
-   # Clear and cache configurations
-   php artisan config:cache
-   php artisan route:cache
-   php artisan view:cache
-   
-   # Build production assets
-   npm run build
-   
-   # Optimize composer autoloader
-   composer install --optimize-autoloader --no-dev
-   ```
-
-### Deployment Methods
-
-#### Option A: Git-based Deployment (Recommended)
-1. Set up SSH keys with Zone.ee
-2. Create a deployment script:
-   ```bash
-   #!/bin/bash
-   cd /path/to/your/project
-   git pull origin main
-   composer install --no-dev --optimize-autoloader
-   npm ci
-   npm run build
-   php artisan migrate --force
-   php artisan config:cache
-   php artisan route:cache
-   php artisan view:cache
-   ```
-
-#### Option B: Manual Deployment via SSH/FTP
-1. Upload all files except:
-   - `node_modules/`
-   - `.env` (create separately on server)
-   - `storage/app/`
-   - `storage/framework/cache/`
-   - `storage/framework/sessions/`
-   - `storage/logs/`
-   
-2. Set proper permissions:
-   ```bash
-   chmod -R 755 storage bootstrap/cache
-   ```
-
-### Zone.ee Specific Configuration
-
-1. **Configure document root** to point to `/public` directory
-2. **Set up `.htaccess`** (already included in Laravel)
-3. **Configure cron job** for Laravel scheduler:
-   ```bash
-   * * * * * cd /path/to/project && php artisan schedule:run >> /dev/null 2>&1
-   ```
-
-### Security Best Practices
-
-1. **SSL Certificate**: Use Zone.ee's free Let's Encrypt SSL
-2. **Environment Security**: Keep `.env` file outside public directory
-3. **File Permissions**: 
-   - Directories: 755
-   - Files: 644
-   - Storage/cache: 775
-4. **Enable backups** through Zone.ee control panel
-
-### Performance Optimization
-
-1. **Use Redis** for cache and sessions (if available):
-   ```env
-   CACHE_DRIVER=redis
-   SESSION_DRIVER=redis
-   ```
-
-2. **Enable OPcache** (usually enabled by default)
-
-3. **Configure queue workers** if using queues:
-   ```bash
-   php artisan queue:work --daemon
-   ```
-
-### Post-Deployment Steps
-
-1. **Run migrations**:
-   ```bash
-   php artisan migrate --force
-   ```
-
-2. **Seed production data** (if needed):
-   ```bash
-   php artisan db:seed --class=ProductionSeeder
-   ```
-
-3. **Test all features**:
-   - Weather API integration
-   - Map functionality
-   - Blog system with authentication
-   - Emotions/Subjects API
-   - E-commerce features
-
-4. **Monitor logs**:
-   - Laravel logs: `storage/logs/laravel.log`
-   - Server logs through Zone.ee panel
-
-### Maintenance
-
-1. **Regular backups**: Enable automated backups in Zone.ee panel
-2. **Monitor resource usage**: Check CPU, memory, and storage usage
-3. **Keep dependencies updated**: Regular security updates
-4. **Database optimization**: Regular cleanup of old sessions/cache
-
-### Support Resources
-
-- **Zone.ee Documentation**: https://help.zone.ee
-- **Laravel Deployment Guide**: https://laravel.com/docs/deployment
 
 ## Future Enhancement Ideas
 
